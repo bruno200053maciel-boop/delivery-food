@@ -6,6 +6,8 @@
     <title>FoodFlow - Área do Motoboy</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Leaflet Awesome Markers -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <style>
         * {
             margin: 0;
@@ -17,13 +19,16 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f8f9fa;
             color: #333;
+            overflow-x: hidden;
         }
 
         .header {
             background: linear-gradient(135deg, #fd7e14, #e8590c);
             color: white;
-            padding: 20px;
+            padding: 15px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
         }
 
         .header-content {
@@ -35,8 +40,13 @@
         }
 
         .logo h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            margin-bottom: 3px;
+        }
+
+        .logo div {
+            font-size: 0.9rem;
+            opacity: 0.9;
         }
 
         .user-info {
@@ -44,27 +54,27 @@
         }
 
         .user-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
         }
 
         .user-email {
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             opacity: 0.8;
         }
 
         .status-toggle {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             margin-top: 5px;
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 24px;
+            width: 45px;
+            height: 22px;
         }
 
         .toggle-switch input {
@@ -82,7 +92,7 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 24px;
+            border-radius: 22px;
         }
 
         .toggle-slider:before {
@@ -90,8 +100,8 @@
             content: "";
             height: 16px;
             width: 16px;
-            left: 4px;
-            bottom: 4px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
             transition: .4s;
             border-radius: 50%;
@@ -102,13 +112,15 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(26px);
+            transform: translateX(23px);
         }
 
         .nav-tabs {
             background: white;
             border-bottom: 2px solid #e9ecef;
             padding: 0 20px;
+            position: relative;
+            z-index: 999;
         }
 
         .nav-container {
@@ -119,12 +131,13 @@
         }
 
         .nav-tab {
-            padding: 15px 25px;
+            padding: 12px 20px;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
             font-weight: 500;
             white-space: nowrap;
+            font-size: 0.9rem;
         }
 
         .nav-tab.active {
@@ -139,7 +152,7 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         .tab-content {
@@ -157,81 +170,83 @@
         }
 
         .page-title {
-            font-size: 2rem;
-            margin-bottom: 20px;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
             color: #333;
         }
 
-        /* Layout do Mapa */
+        /* Layout do Mapa - MELHORADO */
         .map-container {
             display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 20px;
-            height: 600px;
+            grid-template-columns: 1fr 350px;
+            gap: 15px;
+            height: 500px;
         }
 
         #map {
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1;
         }
 
         .sidebar {
             background: white;
             border-radius: 10px;
-            padding: 20px;
+            padding: 15px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             overflow-y: auto;
+            max-height: 500px;
         }
 
-        /* Cards de Estatísticas */
+        /* Stats Compactos */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 25px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
         .stat-card {
             background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
             text-align: center;
-            border-left: 4px solid #fd7e14;
+            border-left: 3px solid #fd7e14;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.2rem;
             font-weight: 700;
             color: #fd7e14;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .stat-label {
             color: #666;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
-        /* Pedidos */
+        /* Pedidos Compactos */
         .pedidos-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
 
         .pedido-card {
             background: white;
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px;
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .pedido-card:hover {
             border-color: #fd7e14;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .pedido-card.ativo {
@@ -243,58 +258,60 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .pedido-id {
             font-weight: 600;
             color: #fd7e14;
+            font-size: 0.9rem;
         }
 
         .pedido-distancia {
             background: #e3f2fd;
             color: #1976d2;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
         .pedido-info {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .pedido-loja {
             font-weight: 600;
-            margin-bottom: 5px;
+            font-size: 0.85rem;
+            margin-bottom: 3px;
         }
 
         .pedido-endereco {
             color: #666;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
+            font-size: 0.75rem;
+            margin-bottom: 3px;
         }
 
         .pedido-total {
             font-weight: 700;
             color: #28a745;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .pedido-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 8px;
+            margin-top: 8px;
         }
 
         .btn-aceitar {
             background: #28a745;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 6px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             flex: 1;
             transition: all 0.3s ease;
         }
@@ -307,10 +324,10 @@
             background: #dc3545;
             color: white;
             border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
+            padding: 6px 10px;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.8rem;
             flex: 1;
             transition: all 0.3s ease;
         }
@@ -319,56 +336,24 @@
             background: #c82333;
         }
 
-        .btn-iniciar {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .btn-iniciar:hover {
-            background: #138496;
-        }
-
-        .btn-finalizar {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .btn-finalizar:hover {
-            background: #1e7e34;
-        }
-
-        /* Entrega Ativa */
+        /* Entrega Ativa Compacta */
         .entrega-ativa {
             background: #e8f5e8;
-            border: 2px solid #28a745;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
         }
 
         .entrega-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
 
         .entrega-titulo {
-            font-size: 1.2rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: #28a745;
         }
@@ -376,132 +361,47 @@
         .entrega-tempo {
             background: #28a745;
             color: white;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .entrega-info {
-            margin-bottom: 15px;
-        }
-
-        .entrega-destino {
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .entrega-endereco {
-            color: #666;
-            font-size: 0.9rem;
-        }
-
-        .progresso-entrega {
-            margin: 20px 0;
-        }
-
-        .etapas {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-
-        .etapa {
-            text-align: center;
-            flex: 1;
-        }
-
-        .etapa.ativa .etapa-icon {
-            background: #28a745;
-            color: white;
-        }
-
-        .etapa.concluida .etapa-icon {
-            background: #28a745;
-            color: white;
-        }
-
-        .etapa-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #e9ecef;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 5px;
-            font-size: 0.8rem;
-        }
-
-        .etapa-label {
-            font-size: 0.7rem;
-            color: #666;
-        }
-
-        .barra-progresso {
-            height: 4px;
-            background: #e9ecef;
-            border-radius: 2px;
-            position: relative;
-            margin: 0 15px;
-        }
-
-        .progresso {
-            position: absolute;
-            height: 100%;
-            background: #28a745;
-            border-radius: 2px;
-            transition: width 0.3s ease;
-        }
-
-        /* Histórico */
-        .historico-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .historico-card {
-            background: white;
+            padding: 2px 6px;
             border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+            font-size: 0.7rem;
+            font-weight: 600;
         }
 
-        .historico-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .historico-data {
-            color: #666;
+        .btn-finalizar {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
             font-size: 0.8rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 8px;
         }
 
-        .historico-valor {
-            font-weight: 700;
-            color: #28a745;
+        .btn-finalizar:hover {
+            background: #1e7e34;
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 15px;
             color: #666;
         }
 
         .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 2rem;
+            margin-bottom: 10px;
             opacity: 0.5;
         }
 
+        /* Responsivo */
         @media (max-width: 768px) {
             .header-content {
                 flex-direction: column;
                 text-align: center;
-                gap: 10px;
+                gap: 8px;
             }
 
             .user-info {
@@ -517,14 +417,32 @@
                 height: 300px;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
+            .container {
+                padding: 10px;
             }
+
+            .nav-tab {
+                padding: 10px 15px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Melhorias no Mapa */
+        .leaflet-container {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .custom-marker {
+            background: #fd7e14;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho -->
+    <!-- Cabeçalho Compacto -->
     <div class="header">
         <div class="header-content">
             <div class="logo">
@@ -535,7 +453,7 @@
                 <div class="user-name" id="userName">João Entregador</div>
                 <div class="user-email" id="userEmail">joao@foodflow.com</div>
                 <div class="status-toggle">
-                    <span id="statusText">Offline</span>
+                    <span id="statusText" style="font-size: 0.8rem;">Offline</span>
                     <label class="toggle-switch">
                         <input type="checkbox" id="statusToggle" onchange="toggleStatus()">
                         <span class="toggle-slider"></span>
@@ -574,11 +492,11 @@
                     <div id="statusOnline" style="display: none;">
                         <div class="stats-grid">
                             <div class="stat-card">
-                                <div class="stat-value" id="entregasHoje">0</div>
+                                <div class="stat-value" id="entregasHoje">3</div>
                                 <div class="stat-label">Entregas Hoje</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-value" id="ganhosHoje">R$ 0</div>
+                                <div class="stat-value" id="ganhosHoje">R$ 45</div>
                                 <div class="stat-label">Ganhos Hoje</div>
                             </div>
                         </div>
@@ -590,27 +508,8 @@
                                     <div class="entrega-tempo" id="tempoEntrega">--:--</div>
                                 </div>
                                 <div class="entrega-info">
-                                    <div class="entrega-destino" id="destinoEntrega">Destino</div>
-                                    <div class="entrega-endereco" id="enderecoEntrega">Endereço</div>
-                                </div>
-                                <div class="progresso-entrega">
-                                    <div class="etapas">
-                                        <div class="etapa ativa" id="etapa1">
-                                            <div class="etapa-icon">🏪</div>
-                                            <div class="etapa-label">Loja</div>
-                                        </div>
-                                        <div class="etapa" id="etapa2">
-                                            <div class="etapa-icon">🚚</div>
-                                            <div class="etapa-label">Entrega</div>
-                                        </div>
-                                        <div class="etapa" id="etapa3">
-                                            <div class="etapa-icon">✅</div>
-                                            <div class="etapa-label">Concluído</div>
-                                        </div>
-                                    </div>
-                                    <div class="barra-progresso">
-                                        <div class="progresso" id="barraProgresso" style="width: 33%"></div>
-                                    </div>
+                                    <div class="pedido-loja" id="destinoEntrega">Destino</div>
+                                    <div class="pedido-endereco" id="enderecoEntrega">Endereço</div>
                                 </div>
                                 <button class="btn-finalizar" onclick="finalizarEntrega()" id="btnFinalizar">
                                     Finalizar Entrega
@@ -618,12 +517,11 @@
                             </div>
                         </div>
 
-                        <h3 style="margin-bottom: 15px;">📦 Pedidos Disponíveis</h3>
+                        <h3 style="margin-bottom: 10px; font-size: 1rem;">📦 Pedidos Disponíveis</h3>
                         <div class="pedidos-list" id="pedidosDisponiveis">
-                            <div class="empty-state">
+                            <div class="empty-state" style="padding: 20px 10px;">
                                 <div>📦</div>
-                                <h3>Nenhum pedido disponível</h3>
-                                <p>Novos pedidos aparecerão aqui</p>
+                                <p style="font-size: 0.8rem;">Nenhum pedido disponível</p>
                             </div>
                         </div>
                     </div>
@@ -645,43 +543,43 @@
 
         <!-- Aba: Histórico -->
         <div id="historico" class="tab-content">
-            <h2 class="page-title">📊 Histórico de Entregas</h2>
+            <h2 class="page-title">📊 Histórico</h2>
             <div class="historico-list" id="historicoEntregas">
                 <div class="empty-state">
                     <div>📊</div>
                     <h3>Nenhum histórico</h3>
-                    <p>Seu histórico de entregas aparecerá aqui</p>
+                    <p>Seu histórico aparecerá aqui</p>
                 </div>
             </div>
         </div>
 
         <!-- Aba: Ganhos -->
         <div id="ganhos" class="tab-content">
-            <h2 class="page-title">💰 Meus Ganhos</h2>
+            <h2 class="page-title">💰 Ganhos</h2>
             
-            <div class="stats-grid">
+            <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 20px;">
                 <div class="stat-card">
-                    <div class="stat-value" id="ganhosSemana">R$ 0</div>
+                    <div class="stat-value" id="ganhosSemana">R$ 280</div>
                     <div class="stat-label">Esta Semana</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="ganhosMes">R$ 0</div>
+                    <div class="stat-value" id="ganhosMes">R$ 1.1k</div>
                     <div class="stat-label">Este Mês</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="totalEntregas">0</div>
+                    <div class="stat-value" id="totalEntregas">47</div>
                     <div class="stat-label">Total Entregas</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="mediaAvaliacao">0.0</div>
-                    <div class="stat-label">Avaliação Média</div>
+                    <div class="stat-value" id="mediaAvaliacao">4.8</div>
+                    <div class="stat-label">Avaliação</div>
                 </div>
             </div>
 
-            <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px;">
-                <h3 style="margin-bottom: 20px;">📈 Últimos Ganhos</h3>
+            <div style="background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3 style="margin-bottom: 15px; font-size: 1.1rem;">📈 Últimos Ganhos</h3>
                 <div id="listaGanhos">
-                    <div class="empty-state">
+                    <div class="empty-state" style="padding: 20px;">
                         <div>💰</div>
                         <p>Seus ganhos aparecerão aqui</p>
                     </div>
@@ -692,6 +590,7 @@
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configuração do Supabase
@@ -706,34 +605,68 @@
         let entregaAtiva = null;
         let watchId = null;
         let pedidosDisponiveis = [];
+        let lastPosition = null;
 
-        // Inicialização do Mapa
+        // Inicialização do Mapa MELHORADA
         function inicializarMapa() {
-            map = L.map('map').setView([-23.5505, -46.6333], 13); // São Paulo
+            map = L.map('map', {
+                zoomControl: true,
+                scrollWheelZoom: true
+            }).setView([-23.5505, -46.6333], 13);
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
+            // Tile layer mais bonito
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap, © CartoDB',
+                subdomains: 'abcd',
+                maxZoom: 20
             }).addTo(map);
 
+            // Estilo melhorado para os controles
+            map.zoomControl.setPosition('topright');
+
             // Tentar obter localização do usuário
+            obterLocalizacaoUsuario();
+        }
+
+        function obterLocalizacaoUsuario() {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const { latitude, longitude } = position.coords;
+                        lastPosition = { lat: latitude, lng: longitude };
+                        
                         map.setView([latitude, longitude], 15);
                         
-                        userMarker = L.marker([latitude, longitude])
-                            .addTo(map)
-                            .bindPopup('Sua localização atual')
-                            .openPopup();
+                        // Marcador personalizado
+                        userMarker = L.marker([latitude, longitude], {
+                            icon: L.AwesomeMarkers.icon({
+                                icon: 'motorcycle',
+                                markerColor: 'orange',
+                                prefix: 'fa',
+                                iconColor: 'white'
+                            })
+                        }).addTo(map)
+                        .bindPopup('<b>Você está aqui</b><br>Sua localização atual')
+                        .openPopup();
+
                     },
                     (error) => {
                         console.log('Erro ao obter localização:', error);
-                        // Usar localização padrão (São Paulo)
-                        userMarker = L.marker([-23.5505, -46.6333])
-                            .addTo(map)
-                            .bindPopup('Sua localização atual')
-                            .openPopup();
+                        // Usar localização padrão com marcador personalizado
+                        userMarker = L.marker([-23.5505, -46.6333], {
+                            icon: L.AwesomeMarkers.icon({
+                                icon: 'motorcycle',
+                                markerColor: 'orange',
+                                prefix: 'fa',
+                                iconColor: 'white'
+                            })
+                        }).addTo(map)
+                        .bindPopup('<b>Localização padrão</b><br>São Paulo - Centro');
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 10000,
+                        maximumAge: 300000 // 5 minutos
                     }
                 );
             }
@@ -752,23 +685,25 @@
             document.querySelector(`[onclick="abrirTab('${tabName}')"]`).classList.add('active');
         }
 
-        // Controle de Status Online/Offline
+        // Controle de Status Online/Offline MELHORADO
         function toggleStatus() {
             const toggle = document.getElementById('statusToggle');
             online = toggle.checked;
 
             if (online) {
                 document.getElementById('statusText').textContent = 'Online';
+                document.getElementById('statusText').style.color = '#28a745';
                 document.getElementById('statusOffline').style.display = 'none';
                 document.getElementById('statusOnline').style.display = 'block';
                 
-                // Iniciar tracking de localização
-                iniciarTracking();
+                // Iniciar tracking suave
+                iniciarTrackingSuave();
                 
                 // Carregar pedidos disponíveis
                 carregarPedidosDisponiveis();
             } else {
                 document.getElementById('statusText').textContent = 'Offline';
+                document.getElementById('statusText').style.color = '#dc3545';
                 document.getElementById('statusOffline').style.display = 'block';
                 document.getElementById('statusOnline').style.display = 'none';
                 
@@ -780,25 +715,22 @@
             atualizarStatusMotoboy(online);
         }
 
-        function iniciarTracking() {
+        function iniciarTrackingSuave() {
             if (navigator.geolocation) {
                 watchId = navigator.geolocation.watchPosition(
                     (position) => {
                         const { latitude, longitude } = position.coords;
+                        lastPosition = { lat: latitude, lng: longitude };
                         
-                        // Atualizar marcador no mapa
+                        // Atualizar marcador no mapa de forma suave
                         if (userMarker) {
                             userMarker.setLatLng([latitude, longitude]);
-                        } else {
-                            userMarker = L.marker([latitude, longitude])
-                                .addTo(map)
-                                .bindPopup('Sua localização atual');
                         }
 
-                        // Centralizar mapa na localização
-                        map.setView([latitude, longitude], 15);
+                        // Não centralizar automaticamente (evita piscar)
+                        // map.setView([latitude, longitude], map.getZoom());
 
-                        // Atualizar localização no banco
+                        // Atualizar localização no banco (com throttle)
                         atualizarLocalizacao(latitude, longitude);
                     },
                     (error) => {
@@ -806,8 +738,8 @@
                     },
                     {
                         enableHighAccuracy: true,
-                        timeout: 5000,
-                        maximumAge: 0
+                        timeout: 15000, // Aumentado para 15 segundos
+                        maximumAge: 30000 // 30 segundos
                     }
                 );
             }
@@ -829,7 +761,7 @@
                         online: online,
                         last_update: new Date().toISOString()
                     })
-                    .eq('motoboy_id', 1); // Em uma app real, seria o ID do usuário logado
+                    .eq('motoboy_id', 1);
 
                 if (error) throw error;
             } catch (error) {
@@ -883,10 +815,9 @@
             
             if (pedidosDisponiveis.length === 0) {
                 container.innerHTML = `
-                    <div class="empty-state">
+                    <div class="empty-state" style="padding: 20px 10px;">
                         <div>📦</div>
-                        <h3>Nenhum pedido disponível</h3>
-                        <p>Novos pedidos aparecerão aqui</p>
+                        <p style="font-size: 0.8rem;">Nenhum pedido disponível</p>
                     </div>
                 `;
                 return;
@@ -895,12 +826,12 @@
             container.innerHTML = pedidosDisponiveis.map(pedido => `
                 <div class="pedido-card" onclick="selecionarPedido(${pedido.id})">
                     <div class="pedido-header">
-                        <div class="pedido-id">Pedido #${pedido.id}</div>
+                        <div class="pedido-id">#${pedido.id}</div>
                         <div class="pedido-distancia">2.5 km</div>
                     </div>
                     <div class="pedido-info">
                         <div class="pedido-loja">${pedido.lojas?.nome || 'Loja'}</div>
-                        <div class="pedido-endereco">${pedido.endereco_entrega || 'Endereço'}</div>
+                        <div class="pedido-endereco">${(pedido.endereco_entrega || 'Endereço').substring(0, 40)}...</div>
                         <div class="pedido-total">R$ ${(pedido.total || 0).toFixed(2)}</div>
                     </div>
                     <div class="pedido-actions">
@@ -920,7 +851,7 @@
                 const { error } = await supabase
                     .from('pedidos')
                     .update({ 
-                        motoboy_id: 1, // ID do motoboy logado
+                        motoboy_id: 1,
                         status: 'em_entrega',
                         updated_at: new Date().toISOString()
                     })
@@ -993,10 +924,7 @@
         }
 
         function adicionarRotaNoMapa(pedido) {
-            // Em uma app real, usaríamos uma API de rotas como Google Maps ou OSRM
-            // Por enquanto, vamos simular com marcadores
-            
-            // Limpar marcadores anteriores
+            // Limpar marcadores anteriores (exceto o do usuário)
             map.eachLayer((layer) => {
                 if (layer instanceof L.Marker && layer !== userMarker) {
                     map.removeLayer(layer);
@@ -1004,16 +932,28 @@
             });
 
             // Adicionar marcador da loja
-            L.marker([-23.5505, -46.6333]) // Posição simulada da loja
-                .addTo(map)
-                .bindPopup('🏪 Loja: ' + pedido.lojas?.nome)
-                .openPopup();
+            L.marker([-23.5505, -46.6333], {
+                icon: L.AwesomeMarkers.icon({
+                    icon: 'shopping-cart',
+                    markerColor: 'green',
+                    prefix: 'fa',
+                    iconColor: 'white'
+                })
+            }).addTo(map)
+            .bindPopup('🏪 ' + pedido.lojas?.name)
+            .openPopup();
 
             // Adicionar marcador do cliente
-            L.marker([-23.5605, -46.6433]) // Posição simulada do cliente
-                .addTo(map)
-                .bindPopup('👤 Cliente: ' + pedido.clientes?.nome)
-                .openPopup();
+            L.marker([-23.5605, -46.6433], {
+                icon: L.AwesomeMarkers.icon({
+                    icon: 'home',
+                    markerColor: 'blue',
+                    prefix: 'fa',
+                    iconColor: 'white'
+                })
+            }).addTo(map)
+            .bindPopup('👤 ' + pedido.clientes?.nome)
+            .openPopup();
         }
 
         async function finalizarEntrega() {
@@ -1048,21 +988,7 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             inicializarMapa();
-            
-            // Carregar dados iniciais
-            carregarEstatisticas();
         });
-
-        // Funções auxiliares (para demonstração)
-        function carregarEstatisticas() {
-            // Dados mockados para demonstração
-            document.getElementById('entregasHoje').textContent = '3';
-            document.getElementById('ganhosHoje').textContent = 'R$ 45,00';
-            document.getElementById('ganhosSemana').textContent = 'R$ 280,00';
-            document.getElementById('ganhosMes').textContent = 'R$ 1.150,00';
-            document.getElementById('totalEntregas').textContent = '47';
-            document.getElementById('mediaAvaliacao').textContent = '4.8';
-        }
     </script>
 </body>
-  </html>
+                </html>
