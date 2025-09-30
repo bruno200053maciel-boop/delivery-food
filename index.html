@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFINITY DELIVERY- Escolha seu Perfil</title>
+    <title>FoodFlow - Delivery Inteligente</title>
     <style>
         * {
             margin: 0;
@@ -22,133 +22,61 @@
         }
 
         .container {
-            max-width: 1200px;
-            width: 100%;
             text-align: center;
+            color: white;
+            max-width: 500px;
+            width: 100%;
         }
 
         .logo {
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             animation: fadeInDown 1s ease;
         }
 
         .logo h1 {
-            color: white;
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 700;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
             margin-bottom: 10px;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .logo p {
-            color: rgba(255,255,255,0.8);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            opacity: 0.9;
         }
 
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+        .slogan {
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            line-height: 1.4;
+            opacity: 0.9;
         }
 
-        .profile-card {
+        .btn-entrar {
             background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            text-decoration: none;
-            display: block;
-            color: inherit;
-        }
-
-        .profile-card:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .profile-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, var(--color), var(--color-dark));
-        }
-
-        .profile-card.cliente {
-            --color: #007bff;
-            --color-dark: #0056b3;
-        }
-
-        .profile-card.loja {
-            --color: #28a745;
-            --color-dark: #1e7e34;
-        }
-
-        .profile-card.motoboy {
-            --color: #fd7e14;
-            --color-dark: #e8590c;
-        }
-
-        .card-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: linear-gradient(135deg, var(--color), var(--color-dark));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            color: white;
-            transition: transform 0.3s ease;
-        }
-
-        .profile-card:hover .card-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
-
-        .card-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .card-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .card-button {
-            background: linear-gradient(135deg, var(--color), var(--color-dark));
-            color: white;
+            color: #667eea;
             border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-size: 1rem;
-            font-weight: 600;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
             display: inline-block;
             text-decoration: none;
         }
 
-        .card-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-            text-decoration: none;
-            color: white;
+        .btn-entrar:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .info {
+            margin-top: 30px;
+            font-size: 1rem;
+            opacity: 0.7;
         }
 
         .floating {
@@ -176,14 +104,17 @@
         }
 
         @media (max-width: 768px) {
-            .cards-container {
-                grid-template-columns: 1fr;
-                max-width: 400px;
-                margin: 0 auto;
+            .logo h1 {
+                font-size: 3rem;
             }
             
-            .logo h1 {
-                font-size: 2.5rem;
+            .slogan {
+                font-size: 1.2rem;
+            }
+            
+            .btn-entrar {
+                padding: 18px 35px;
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -191,43 +122,21 @@
 <body>
     <div class="container">
         <div class="logo floating">
-            <h1>🍔 INFINITY DELIVERY</h1>
-            <p>Escolha como você quer fazer parte da nossa plataforma</p>
+            <h1>🍔 FoodFlow</h1>
+            <p>Delivery Inteligente</p>
         </div>
 
-        <div class="cards-container">
-            <!-- Card Cliente -->
-            <a href="cadastro-cliente.html" class="profile-card cliente">
-                <div class="card-icon">👤</div>
-                <h2 class="card-title">Sou Cliente</h2>
-                <p class="card-description">
-                    Quero fazer pedidos incríveis dos melhores restaurantes 
-                    da minha região com entrega rápida e segura.
-                </p>
-                <div class="card-button">Fazer Pedidos</div>
-            </a>
+        <div class="slogan">
+            Pedidos rápidos • Entregas seguras<br>
+            Restaurantes premium • Entregadores confiáveis
+        </div>
 
-            <!-- Card Loja -->
-            <a href="cadastro-loja.html" class="profile-card loja">
-                <div class="card-icon">🏪</div>
-                <h2 class="card-title">Minha Loja</h2>
-                <p class="card-description">
-                    Sou restaurante ou loja e quero vender mais recebendo 
-                    pedidos online e expandindo meu negócio.
-                </p>
-                <div class="card-button">Cadastrar Loja</div>
-            </a>
+        <a href="login.html" class="btn-entrar">
+            🚀 ENTRAR NO FOODFLOW
+        </a>
 
-            <!-- Card Motoboy -->
-            <a href="cadastro-motoboy.html" class="profile-card motoboy">
-                <div class="card-icon">🛵</div>
-                <h2 class="card-title">Sou Entregador</h2>
-                <p class="card-description">
-                    Quero fazer entregas e ganhar dinheiro com flexibilidade 
-                    de horários e rotas inteligentes.
-                </p>
-                <div class="card-button">Começar a Entregar</div>
-            </a>
+        <div class="info">
+            Não tem conta? Crie uma em segundos!
         </div>
     </div>
 </body>
