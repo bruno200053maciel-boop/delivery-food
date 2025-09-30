@@ -6,8 +6,6 @@
     <title>FoodFlow - Área do Motoboy</title>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- Leaflet Awesome Markers -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css" />
     <style>
         * {
             margin: 0;
@@ -22,63 +20,73 @@
             line-height: 1.6;
         }
 
+        /* HEADER COMPACTO E INFORMATIVO */
         .header {
             background: linear-gradient(135deg, #fd7e14, #e8590c);
             color: white;
-            padding: 20px 0;
+            padding: 15px 0;
             box-shadow: 0 2px 15px rgba(0,0,0,0.1);
         }
 
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
             align-items: center;
+            gap: 20px;
             padding: 0 25px;
         }
 
         .logo h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.6rem;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .logo div {
-            font-size: 1rem;
+            font-size: 0.9rem;
             opacity: 0.9;
         }
 
-        .user-info {
-            text-align: right;
-        }
-
-        .user-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 3px;
-        }
-
-        .user-email {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
-
-        .status-toggle {
+        /* STATUS NO HEADER */
+        .header-status {
             display: flex;
             align-items: center;
-            gap: 12px;
-            background: rgba(255,255,255,0.1);
-            padding: 8px 12px;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.15);
+            padding: 8px 15px;
             border-radius: 20px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .status-online {
+            color: #28a745;
+        }
+
+        .status-offline {
+            color: #dc3545;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: currentColor;
         }
 
         .toggle-switch {
             position: relative;
             display: inline-block;
-            width: 50px;
-            height: 24px;
+            width: 45px;
+            height: 22px;
         }
 
         .toggle-switch input {
@@ -96,14 +104,14 @@
             bottom: 0;
             background-color: #ccc;
             transition: .4s;
-            border-radius: 24px;
+            border-radius: 22px;
         }
 
         .toggle-slider:before {
             position: absolute;
             content: "";
-            height: 18px;
-            width: 18px;
+            height: 16px;
+            width: 16px;
             left: 3px;
             bottom: 3px;
             background-color: white;
@@ -116,14 +124,30 @@
         }
 
         input:checked + .toggle-slider:before {
-            transform: translateX(26px);
+            transform: translateX(23px);
         }
 
+        .user-info {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .user-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .user-email {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* NAVEGAÇÃO SIMPLES */
         .nav-tabs {
             background: white;
             border-bottom: 2px solid #e9ecef;
             padding: 0 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .nav-container {
@@ -134,13 +158,13 @@
         }
 
         .nav-tab {
-            padding: 16px 24px;
+            padding: 14px 20px;
             cursor: pointer;
             border-bottom: 3px solid transparent;
             transition: all 0.3s ease;
             font-weight: 500;
             white-space: nowrap;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #666;
         }
 
@@ -155,9 +179,10 @@
             color: #fd7e14;
         }
 
+        /* CONTEÚDO PRINCIPAL */
         .container {
             max-width: 1200px;
-            margin: 30px auto;
+            margin: 20px auto;
             padding: 0 25px;
         }
 
@@ -171,89 +196,83 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .page-title {
-            font-size: 2rem;
-            margin-bottom: 25px;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
             color: #333;
             font-weight: 600;
         }
 
-        /* Layout do Mapa - MAIS ESPAÇADO */
-        .map-container {
-            display: grid;
-            grid-template-columns: 1fr 380px;
-            gap: 25px;
-            height: 600px;
-            margin-bottom: 30px;
+        /* MAPA GRANDE E LIMPO */
+        .map-section {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e9ecef;
+            overflow: hidden;
         }
 
         #map {
+            height: 600px;
+            width: 100%;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border: 1px solid #e9ecef;
+        }
+
+        /* SIDEBAR COMPACTA */
+        .map-with-sidebar {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+            height: 600px;
         }
 
         .sidebar {
             background: white;
             border-radius: 12px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            overflow-y: auto;
             border: 1px solid #e9ecef;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        /* Stats com mais espaço */
+        /* STATS COMPACTOS */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #f8f9fa, #ffffff);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
             text-align: center;
-            border: 1px solid #e9ecef;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-left: 3px solid #fd7e14;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             font-weight: 700;
             color: #fd7e14;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .stat-label {
             color: #666;
-            font-size: 0.85rem;
-            font-weight: 500;
+            font-size: 0.75rem;
         }
 
-        /* Pedidos com mais espaço */
-        .pedidos-section {
-            background: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .section-title {
-            font-size: 1.2rem;
-            font-weight: 600;
+        /* PEDIDOS */
+        .pedidos-section h3 {
+            font-size: 1.1rem;
             margin-bottom: 15px;
             color: #333;
             display: flex;
@@ -264,155 +283,125 @@
         .pedidos-list {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             max-height: 300px;
             overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        /* Scrollbar personalizada */
-        .pedidos-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .pedidos-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 3px;
-        }
-
-        .pedidos-list::-webkit-scrollbar-thumb {
-            background: #fd7e14;
-            border-radius: 3px;
         }
 
         .pedido-card {
             background: white;
             border: 1px solid #e9ecef;
-            border-radius: 10px;
-            padding: 18px;
+            border-radius: 8px;
+            padding: 15px;
             transition: all 0.3s ease;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
         }
 
         .pedido-card:hover {
             border-color: #fd7e14;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        .pedido-card.ativo {
-            border-color: #28a745;
-            background: #f8fff9;
-            box-shadow: 0 4px 15px rgba(40,167,69,0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .pedido-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
 
         .pedido-id {
             font-weight: 600;
             color: #fd7e14;
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
 
         .pedido-distancia {
             background: #e3f2fd;
             color: #1976d2;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
         .pedido-info {
-            margin-bottom: 12px;
+            margin-bottom: 10px;
         }
 
         .pedido-loja {
             font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 5px;
-            color: #333;
+            font-size: 0.85rem;
+            margin-bottom: 3px;
         }
 
         .pedido-endereco {
             color: #666;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-            line-height: 1.4;
+            font-size: 0.75rem;
+            margin-bottom: 3px;
         }
 
         .pedido-total {
             font-weight: 700;
             color: #28a745;
-            font-size: 1.1rem;
+            font-size: 0.9rem;
         }
 
         .pedido-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 12px;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         .btn-aceitar {
             background: #28a745;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             flex: 1;
             transition: all 0.3s ease;
-            font-weight: 600;
         }
 
         .btn-aceitar:hover {
             background: #1e7e34;
-            transform: translateY(-1px);
         }
 
         .btn-recusar {
             background: #dc3545;
             color: white;
             border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
+            padding: 8px 12px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             flex: 1;
             transition: all 0.3s ease;
-            font-weight: 600;
         }
 
         .btn-recusar:hover {
             background: #c82333;
-            transform: translateY(-1px);
         }
 
-        /* Entrega Ativa com mais espaço */
+        /* ENTREGA ATIVA */
         .entrega-ativa {
-            background: linear-gradient(135deg, #e8f5e8, #f0f9f0);
-            border: 2px solid #28a745;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
+            background: #e8f5e8;
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            padding: 15px;
         }
 
         .entrega-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .entrega-titulo {
-            font-size: 1.1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #28a745;
         }
@@ -420,9 +409,9 @@
         .entrega-tempo {
             background: #28a745;
             color: white;
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 0.85rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
@@ -430,122 +419,92 @@
             background: #28a745;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 10px 15px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             width: 100%;
             transition: all 0.3s ease;
+            margin-top: 10px;
             font-weight: 600;
-            margin-top: 15px;
         }
 
         .btn-finalizar:hover {
             background: #1e7e34;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(40,167,69,0.3);
         }
 
         .empty-state {
             text-align: center;
-            padding: 40px 20px;
+            padding: 30px 20px;
             color: #666;
         }
 
         .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
             opacity: 0.5;
         }
 
-        /* Abas de conteúdo */
-        .content-tab {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border: 1px solid #e9ecef;
-            margin-bottom: 25px;
-        }
-
-        /* Responsivo */
-        @media (max-width: 1024px) {
-            .map-container {
-                grid-template-columns: 1fr;
-                height: 400px;
-            }
-            
-            .sidebar {
-                height: 400px;
-            }
-        }
-
+        /* RESPONSIVO */
         @media (max-width: 768px) {
             .header-content {
-                flex-direction: column;
+                grid-template-columns: 1fr;
                 text-align: center;
-                gap: 15px;
+                gap: 10px;
+            }
+
+            .header-status {
+                order: 2;
             }
 
             .user-info {
                 text-align: center;
+                order: 3;
             }
 
-            .nav-container {
-                flex-wrap: wrap;
-                justify-content: center;
+            .map-with-sidebar {
+                grid-template-columns: 1fr;
+                height: auto;
             }
 
-            .nav-tab {
-                padding: 12px 18px;
-                font-size: 0.9rem;
+            #map {
+                height: 400px;
             }
 
-            .container {
-                margin: 20px auto;
-                padding: 0 15px;
+            .sidebar {
+                height: 400px;
             }
-
-            .content-tab {
-                padding: 20px;
-            }
-        }
-
-        /* Melhorias no Mapa */
-        .leaflet-container {
-            background: #f8f9fa;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .leaflet-popup-content {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
-    <!-- Cabeçalho -->
+    <!-- HEADER COM STATUS INTEGRADO -->
     <div class="header">
         <div class="header-content">
             <div class="logo">
                 <h1>🛵 FoodFlow</h1>
                 <div>Área do Motoboy</div>
             </div>
+
+            <div class="header-status">
+                <div class="status-indicator" id="statusIndicator">
+                    <div class="status-dot"></div>
+                    <span id="statusText">Offline</span>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="statusToggle" onchange="toggleStatus()">
+                    <span class="toggle-slider"></span>
+                </label>
+            </div>
+
             <div class="user-info">
                 <div class="user-name" id="userName">João Entregador</div>
                 <div class="user-email" id="userEmail">joao@foodflow.com</div>
-                <div class="status-toggle">
-                    <span id="statusText" style="font-size: 0.9rem;">Offline</span>
-                    <label class="toggle-switch">
-                        <input type="checkbox" id="statusToggle" onchange="toggleStatus()">
-                        <span class="toggle-slider"></span>
-                    </label>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- Navegação -->
+    <!-- NAVEGAÇÃO -->
     <div class="nav-tabs">
         <div class="nav-container">
             <div class="nav-tab active" onclick="abrirTab('mapa')">🗺️ Mapa</div>
@@ -555,23 +514,22 @@
         </div>
     </div>
 
-    <!-- Conteúdo -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="container">
-        <!-- Aba: Mapa -->
+        <!-- ABA: MAPA (AGORA LIMPO) -->
         <div id="mapa" class="tab-content active">
             <h2 class="page-title">🗺️ Mapa de Entregas</h2>
             
-            <div class="map-container">
-                <div id="map"></div>
+            <div class="map-with-sidebar">
+                <!-- MAPA GRANDE E LIMPO -->
+                <div class="map-section">
+                    <div id="map"></div>
+                </div>
                 
+                <!-- SIDEBAR APENAS COM CONTEÚDO ÚTIL -->
                 <div class="sidebar">
-                    <div id="statusOffline" class="empty-state">
-                        <div>🔴</div>
-                        <h3>Você está offline</h3>
-                        <p>Ative o status para receber entregas</p>
-                    </div>
-
                     <div id="statusOnline" style="display: none;">
+                        <!-- STATS RÁPIDOS -->
                         <div class="stats-grid">
                             <div class="stat-card">
                                 <div class="stat-value" id="entregasHoje">3</div>
@@ -583,73 +541,71 @@
                             </div>
                         </div>
 
+                        <!-- ENTREGA ATIVA -->
                         <div id="entregaAtivaContainer" style="display: none;">
                             <div class="entrega-ativa">
                                 <div class="entrega-header">
                                     <div class="entrega-titulo">Entrega Ativa</div>
                                     <div class="entrega-tempo" id="tempoEntrega">--:--</div>
                                 </div>
-                                <div class="entrega-info">
+                                <div class="pedido-info">
                                     <div class="pedido-loja" id="destinoEntrega">Destino</div>
-                                    <div class="pedido-endereco" id="enderecoEntrega">Endereço completo do cliente para entrega</div>
+                                    <div class="pedido-endereco" id="enderecoEntrega">Endereço do cliente</div>
                                 </div>
-                                <button class="btn-finalizar" onclick="finalizarEntrega()" id="btnFinalizar">
+                                <button class="btn-finalizar" onclick="finalizarEntrega()">
                                     ✅ Finalizar Entrega
                                 </button>
                             </div>
                         </div>
 
+                        <!-- PEDIDOS DISPONÍVEIS -->
                         <div class="pedidos-section">
-                            <div class="section-title">
-                                <span>📦</span>
-                                Pedidos Disponíveis
-                            </div>
+                            <h3>📦 Pedidos Disponíveis</h3>
                             <div class="pedidos-list" id="pedidosDisponiveis">
-                                <div class="empty-state" style="padding: 30px 20px;">
+                                <div class="empty-state">
                                     <div>📦</div>
-                                    <p>Nenhum pedido disponível no momento</p>
+                                    <p>Nenhum pedido disponível</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- OFFLINE STATE REMOVIDO DO MAPA -->
                 </div>
             </div>
         </div>
 
-        <!-- Aba: Entregas -->
+        <!-- OUTRAS ABAS (MANTIDAS SIMPLES) -->
         <div id="entregas" class="tab-content">
             <h2 class="page-title">📦 Minhas Entregas</h2>
-            <div class="content-tab">
+            <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
                 <div id="listaEntregas">
                     <div class="empty-state">
                         <div>🚚</div>
-                        <h3>Nenhuma entrega encontrada</h3>
-                        <p>Suas entregas aparecerão aqui quando você aceitar pedidos</p>
+                        <h3>Nenhuma entrega</h3>
+                        <p>Suas entregas aparecerão aqui</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Aba: Histórico -->
         <div id="historico" class="tab-content">
-            <h2 class="page-title">📊 Histórico de Entregas</h2>
-            <div class="content-tab">
-                <div class="historico-list" id="historicoEntregas">
+            <h2 class="page-title">📊 Histórico</h2>
+            <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div id="historicoEntregas">
                     <div class="empty-state">
                         <div>📊</div>
-                        <h3>Nenhum histórico disponível</h3>
-                        <p>Seu histórico de entregas aparecerá aqui</p>
+                        <h3>Nenhum histórico</h3>
+                        <p>Seu histórico aparecerá aqui</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Aba: Ganhos -->
         <div id="ganhos" class="tab-content">
-            <h2 class="page-title">💰 Meus Ganhos</h2>
-            
-            <div class="content-tab">
-                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 30px;">
+            <h2 class="page-title">💰 Ganhos</h2>
+            <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 25px;">
                     <div class="stat-card">
                         <div class="stat-value" id="ganhosSemana">R$ 280</div>
                         <div class="stat-label">Esta Semana</div>
@@ -667,23 +623,18 @@
                         <div class="stat-label">Avaliação</div>
                     </div>
                 </div>
-
-                <div style="background: #f8f9fa; border-radius: 10px; padding: 25px;">
-                    <h3 style="margin-bottom: 20px; font-size: 1.3rem; color: #333;">📈 Últimos Ganhos</h3>
-                    <div id="listaGanhos">
-                        <div class="empty-state" style="padding: 30px;">
-                            <div>💰</div>
-                            <p>Seus ganhos aparecerão aqui</p>
-                        </div>
+                <div id="listaGanhos">
+                    <div class="empty-state">
+                        <div>💰</div>
+                        <p>Seus ganhos aparecerão aqui</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.min.js"></script>
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script>
         // Configuração do Supabase
@@ -695,70 +646,56 @@
         let map;
         let userMarker;
         let online = false;
-        let entregaAtiva = null;
-        let watchId = null;
-        let pedidosDisponiveis = [];
 
         // Inicialização do Mapa
         function inicializarMapa() {
-            map = L.map('map', {
-                zoomControl: true,
-                scrollWheelZoom: true
-            }).setView([-23.5505, -46.6333], 13);
+            map = L.map('map').setView([-23.5505, -46.6333], 13);
 
-            // Tile layer mais bonito
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                attribution: '© OpenStreetMap, © CartoDB',
-                subdomains: 'abcd',
-                maxZoom: 20
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
             }).addTo(map);
 
-            // Estilo melhorado para os controles
-            map.zoomControl.setPosition('topright');
-
-            // Tentar obter localização do usuário
-            obterLocalizacaoUsuario();
-        }
-
-        function obterLocalizacaoUsuario() {
+            // Tentar obter localização
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const { latitude, longitude } = position.coords;
-                        
                         map.setView([latitude, longitude], 15);
                         
-                        // Marcador personalizado
-                        userMarker = L.marker([latitude, longitude], {
-                            icon: L.AwesomeMarkers.icon({
-                                icon: 'motorcycle',
-                                markerColor: 'orange',
-                                prefix: 'fa',
-                                iconColor: 'white'
-                            })
-                        }).addTo(map)
-                        .bindPopup('<b>Você está aqui</b><br>Sua localização atual')
-                        .openPopup();
-
+                        userMarker = L.marker([latitude, longitude])
+                            .addTo(map)
+                            .bindPopup('Sua localização')
+                            .openPopup();
                     },
                     (error) => {
-                        console.log('Erro ao obter localização:', error);
-                        // Usar localização padrão com marcador personalizado
-                        userMarker = L.marker([-23.5505, -46.6333], {
-                            icon: L.AwesomeMarkers.icon({
-                                icon: 'motorcycle',
-                                markerColor: 'orange',
-                                prefix: 'fa',
-                                iconColor: 'white'
-                            })
-                        }).addTo(map)
-                        .bindPopup('<b>Localização padrão</b><br>São Paulo - Centro');
+                        userMarker = L.marker([-23.5505, -46.6333])
+                            .addTo(map)
+                            .bindPopup('Localização padrão');
                     }
                 );
             }
         }
 
-        // Funções de navegação
+        // Controle de Status
+        function toggleStatus() {
+            const toggle = document.getElementById('statusToggle');
+            const indicator = document.getElementById('statusIndicator');
+            online = toggle.checked;
+
+            if (online) {
+                document.getElementById('statusText').textContent = 'Online';
+                indicator.classList.add('status-online');
+                indicator.classList.remove('status-offline');
+                document.getElementById('statusOnline').style.display = 'block';
+            } else {
+                document.getElementById('statusText').textContent = 'Offline';
+                indicator.classList.add('status-offline');
+                indicator.classList.remove('status-online');
+                document.getElementById('statusOnline').style.display = 'none';
+            }
+        }
+
+        // Navegação
         function abrirTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -771,72 +708,20 @@
             document.querySelector(`[onclick="abrirTab('${tabName}')"]`).classList.add('active');
         }
 
-        // Controle de Status Online/Offline
-        function toggleStatus() {
-            const toggle = document.getElementById('statusToggle');
-            online = toggle.checked;
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarMapa();
+            
+            // Estado inicial
+            const indicator = document.getElementById('statusIndicator');
+            indicator.classList.add('status-offline');
+        });
 
-            if (online) {
-                document.getElementById('statusText').textContent = 'Online';
-                document.getElementById('statusText').style.color = '#28a745';
-                document.getElementById('statusOffline').style.display = 'none';
-                document.getElementById('statusOnline').style.display = 'block';
-                
-                // Iniciar tracking
-                iniciarTracking();
-                
-                // Carregar pedidos disponíveis
-                carregarPedidosDisponiveis();
-            } else {
-                document.getElementById('statusText').textContent = 'Offline';
-                document.getElementById('statusText').style.color = '#dc3545';
-                document.getElementById('statusOffline').style.display = 'block';
-                document.getElementById('statusOnline').style.display = 'none';
-                
-                // Parar tracking
-                pararTracking();
-            }
-
-            // Atualizar status no banco
-            atualizarStatusMotoboy(online);
+        // Funções mock para demonstração
+        function finalizarEntrega() {
+            alert('Entrega finalizada com sucesso!');
+            document.getElementById('entregaAtivaContainer').style.display = 'none';
         }
-
-        function iniciarTracking() {
-            if (navigator.geolocation) {
-                watchId = navigator.geolocation.watchPosition(
-                    (position) => {
-                        const { latitude, longitude } = position.coords;
-                        
-                        // Atualizar marcador no mapa
-                        if (userMarker) {
-                            userMarker.setLatLng([latitude, longitude]);
-                        }
-
-                        // Atualizar localização no banco
-                        atualizarLocalizacao(latitude, longitude);
-                    },
-                    (error) => {
-                        console.log('Erro no tracking:', error);
-                    },
-                    {
-                        enableHighAccuracy: true,
-                        timeout: 15000,
-                        maximumAge: 30000
-                    }
-                );
-            }
-        }
-
-        function pararTracking() {
-            if (watchId) {
-                navigator.geolocation.clearWatch(watchId);
-                watchId = null;
-            }
-        }
-
-        // Resto do código permanece igual...
-        // [O resto do código JavaScript seria igual ao anterior, mas vou omitir para não repetir]
-
     </script>
 </body>
-    </html>
+</html>
