@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Cadastro Loja</title>
+    
+    <!-- 🔹 DICA 1: Usamos cores VERDES para lojas -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* 🔹 DICA 2: Gradiente verde para lojas */
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            /* 🔹 DICA 3: Verde para identificar como loja */
+            color: #28a745;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-container input, 
+        .input-container select, 
+        .input-container textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .input-container textarea {
+            height: 80px;
+            resize: vertical;
+        }
+
+        .input-container label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .input-container textarea + label {
+            top: 25px;
+        }
+
+        .input-container input:focus,
+        .input-container select:focus,
+        .input-container textarea:focus {
+            /* 🔹 DICA 4: Borda verde no focus */
+            border-color: #28a745;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(40,167,69,0.1);
+        }
+
+        .input-container input:focus + label,
+        .input-container input:not(:placeholder-shown) + label,
+        .input-container select:focus + label,
+        .input-container select:not([value=""]) + label,
+        .input-container textarea:focus + label,
+        .input-container textarea:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 0.8rem;
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            /* 🔹 DICA 5: Botão verde para lojas */
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(40,167,69,0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #28a745;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #28a745;
+            color: white;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🏪 FoodFlow</h1>
+            <p>Cadastre sua loja ou restaurante</p>
+        </div>
+
+        <!-- 🔹 DICA 6: Formulário específico para lojas -->
+        <form id="cadastroForm">
+            <div class="input-container">
+                <input type="text" id="nome" placeholder=" " required>
+                <label for="nome">Nome da loja/restaurante</label>
+            </div>
+
+            <div class="input-container">
+                <input type="email" id="email" placeholder=" " required>
+                <label for="email">E-mail comercial</label>
+            </div>
+
+            <div class="input-container">
+                <input type="tel" id="telefone" placeholder=" ">
+                <label for="telefone">Telefone</label>
+            </div>
+
+            <div class="input-container">
+                <select id="categoria" required>
+                    <option value="" selected disabled></option>
+                    <option value="restaurante">🍽️ Restaurante</option>
+                    <option value="lanchonete">🍔 Lanchonete</option>
+                    <option value="pizzaria">🍕 Pizzaria</option>
+                    <option value="mercado">🛒 Mercado</option>
+                    <option value="outros">🏪 Outros</option>
+                </select>
+                <label for="categoria">Categoria</label>
+            </div>
+
+            <div class="input-container">
+                <textarea id="descricao" placeholder=" "></textarea>
+                <label for="descricao">Descrição da loja</label>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="endereco" placeholder=" " required>
+                <label for="endereco">Endereço completo</label>
+            </div>
+
+            <div class="input-container">
+                <input type="password" id="senha" placeholder=" " required minlength="6">
+                <label for="senha">Senha</label>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                🏪 Cadastrar Minha Loja
+            </button>
+
+            <button type="button" class="btn-secondary" onclick="voltarParaHome()">
+                ← Voltar para Home
+            </button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // 🔹 DICA 7: Mesma configuração do Supabase
+        const supabaseUrl = 'https://lsskaqudqvppfwfoxsih.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzc2thcXVkcXZwcGZ3Zm94c2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNDIxMzEsImV4cCI6MjA3NDgxODEzMX0.-M8bTf68RVY_kVrVyZ_BEfROLOrykauRYJzS2OnH6Fo';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // 🔹 DICA 8: Agora salvamos na tabela Lojas
+        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const loja = {
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                telefone: document.getElementById('telefone').value,
+                categoria: document.getElementById('categoria').value,
+                descricao: document.getElementById('descricao').value,
+                endereco: document.getElementById('endereco').value,
+                senha: document.getElementById('senha').value,
+                aberta: true // Loja começa aberta
+            };
+
+            mostrarMensagem('🔄 Cadastrando loja...', 'loading');
+
+            try {
+                // 🔹 DICA 9: Primeiro cria o usuário
+                const { data: usuario, error: userError } = await supabase
+                    .from('usuarios')
+                    .insert([{
+                        tipo: 'loja',
+                        nome: loja.nome,
+                        email: loja.email,
+                        senha: loja.senha,
+                        telefone: loja.telefone
+                    }])
+                    .select();
+
+                if (userError) throw new Error(userError.message);
+
+                // 🔹 DICA 10: Depois cria a loja vinculada ao usuário
+                const { data: lojaData, error: lojaError } = await supabase
+                    .from('lojas')
+                    .insert([{
+                        usuario_id: usuario[0].id,
+                        nome: loja.nome,
+                        descricao: loja.descricao,
+                        categoria: loja.categoria,
+                        endereco: loja.endereco,
+                        telefone: loja.telefone
+                    }])
+                    .select();
+
+                if (lojaError) throw new Error(lojaError.message);
+
+                mostrarMensagem('🎉 Loja cadastrada com sucesso! Redirecionando...', 'success');
+                document.getElementById('cadastroForm').reset();
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+
+            } catch (error) {
+                let mensagemErro = error.message;
+                
+                if (error.message.includes('duplicate key')) {
+                    mensagemErro = '❌ Este e-mail já está cadastrado!';
+                } else if (error.message.includes('network')) {
+                    mensagemErro = '🌐 Erro de conexão. Verifique sua internet.';
+                }
+                
+                mostrarMensagem(mensagemErro, 'error');
+            }
+        });
+
+        function mostrarMensagem(texto, tipo) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = texto;
+            messageDiv.className = `message ${tipo}`;
+            messageDiv.style.display = 'block';
+            
+            if (tipo === 'error') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function voltarParaHome() {
+            window.location.href = 'index.html';
+        }
+
+        // 🔹 DICA 11: Máscara para telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+    </script>
+</body>
+                  </html>
