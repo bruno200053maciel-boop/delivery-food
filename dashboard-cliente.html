@@ -28,7 +28,7 @@
             max-width: 1200px;
             margin: 0 auto;
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
         }
 
@@ -234,7 +234,7 @@
 
         .carrinho-item {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             padding: 15px 0;
             border-bottom: 1px solid #e9ecef;
@@ -330,7 +330,7 @@
 
         .pedido-header {
             display: flex;
-            justify-content: between;
+            justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
         }
@@ -419,8 +419,8 @@
                 <div>Área do Cliente</div>
             </div>
             <div class="user-info">
-                <div class="user-name" id="userName">Bruno Silva</div>
-                <div class="user-email" id="userEmail">bruno@email.com</div>
+                <div class="user-name" id="userName">Cliente FoodFlow</div>
+                <div class="user-email" id="userEmail">cliente@foodflow.com</div>
             </div>
         </div>
     </div>
@@ -479,10 +479,10 @@
             <h2 class="page-title">👤 Meu Perfil</h2>
             <div style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <div style="margin-bottom: 15px;">
-                    <strong>Nome:</strong> <span id="perfilNome">Bruno Silva</span>
+                    <strong>Nome:</strong> <span id="perfilNome">Cliente FoodFlow</span>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <strong>E-mail:</strong> <span id="perfilEmail">bruno@email.com</span>
+                    <strong>E-mail:</strong> <span id="perfilEmail">cliente@foodflow.com</span>
                 </div>
                 <div style="margin-bottom: 15px;">
                     <strong>Telefone:</strong> <span id="perfilTelefone">(11) 99999-9999</span>
@@ -541,7 +541,7 @@
             abrirTab('lojas');
         }
 
-        // Carregar lojas
+        // Carregar lojas - BUSCA NO BANCO REAL
         async function carregarLojas() {
             try {
                 const { data: lojas, error } = await supabase
@@ -581,7 +581,7 @@
             }
         }
 
-        // Carregar produtos
+        // Carregar produtos - BUSCA PRODUTOS REAIS DO BANCO
         async function carregarProdutos(lojaId) {
             try {
                 const { data: produtos, error } = await supabase
@@ -607,7 +607,7 @@
                     card.innerHTML = `
                         <div class="produto-nome">${produto.nome}</div>
                         <div class="produto-descricao">${produto.descricao || 'Sem descrição'}</div>
-                        <div class="produto-preco">R$ ${produto.preco?.toFixed(2) || '0,00'}</div>
+                        <div class="produto-preco">R$ ${(produto.preco || 0).toFixed(2)}</div>
                         <button class="btn-adicionar" onclick="adicionarAoCarrinho(${JSON.stringify(produto).replace(/"/g, '&quot;')})">
                             Adicionar ao Carrinho
                         </button>
@@ -726,8 +726,7 @@
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
             carregarLojas();
-            // Em uma app real, carregaríamos os dados do usuário logado
         });
     </script>
 </body>
-  </html>
+</html>
