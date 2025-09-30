@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Área do Motoboy</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fd7e14, #e8590c);
+            color: white;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .status-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background-color: #28a745;
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(26px);
+        }
+
+        .nav-tabs {
+            background: white;
+            border-bottom: 2px solid #e9ecef;
+            padding: 0 20px;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .nav-tab.active {
+            border-bottom-color: #fd7e14;
+            color: #fd7e14;
+        }
+
+        .nav-tab:hover {
+            background: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Layout do Mapa */
+        .map-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 20px;
+            height: 600px;
+        }
+
+        #map {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+
+        /* Cards de Estatísticas */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+            border-left: 4px solid #fd7e14;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fd7e14;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Pedidos */
+        .pedidos-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .pedido-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .pedido-card:hover {
+            border-color: #fd7e14;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .pedido-card.ativo {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+
+        .pedido-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .pedido-id {
+            font-weight: 600;
+            color: #fd7e14;
+        }
+
+        .pedido-distancia {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pedido-info {
+            margin-bottom: 10px;
+        }
+
+        .pedido-loja {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .pedido-endereco {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .pedido-total {
+            font-weight: 700;
+            color: #28a745;
+            font-size: 1.1rem;
+        }
+
+        .pedido-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-aceitar {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-aceitar:hover {
+            background: #1e7e34;
+        }
+
+        .btn-recusar {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            flex: 1;
+            transition: all 0.3s ease;
+        }
+
+        .btn-recusar:hover {
+            background: #c82333;
+        }
+
+        .btn-iniciar {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-iniciar:hover {
+            background: #138496;
+        }
+
+        .btn-finalizar {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .btn-finalizar:hover {
+            background: #1e7e34;
+        }
+
+        /* Entrega Ativa */
+        .entrega-ativa {
+            background: #e8f5e8;
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .entrega-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .entrega-titulo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .entrega-tempo {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .entrega-info {
+            margin-bottom: 15px;
+        }
+
+        .entrega-destino {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .entrega-endereco {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .progresso-entrega {
+            margin: 20px 0;
+        }
+
+        .etapas {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .etapa {
+            text-align: center;
+            flex: 1;
+        }
+
+        .etapa.ativa .etapa-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .etapa.concluida .etapa-icon {
+            background: #28a745;
+            color: white;
+        }
+
+        .etapa-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 5px;
+            font-size: 0.8rem;
+        }
+
+        .etapa-label {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .barra-progresso {
+            height: 4px;
+            background: #e9ecef;
+            border-radius: 2px;
+            position: relative;
+            margin: 0 15px;
+        }
+
+        .progresso {
+            position: absolute;
+            height: 100%;
+            background: #28a745;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        /* Histórico */
+        .historico-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .historico-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        }
+
+        .historico-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .historico-data {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .historico-valor {
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+
+            .user-info {
+                text-align: center;
+            }
+
+            .map-container {
+                grid-template-columns: 1fr;
+                height: 400px;
+            }
+
+            .sidebar {
+                height: 300px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>🛵 FoodFlow</h1>
+                <div>Área do Motoboy</div>
+            </div>
+            <div class="user-info">
+                <div class="user-name" id="userName">João Entregador</div>
+                <div class="user-email" id="userEmail">joao@foodflow.com</div>
+                <div class="status-toggle">
+                    <span id="statusText">Offline</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="statusToggle" onchange="toggleStatus()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegação -->
+    <div class="nav-tabs">
+        <div class="nav-container">
+            <div class="nav-tab active" onclick="abrirTab('mapa')">🗺️ Mapa</div>
+            <div class="nav-tab" onclick="abrirTab('entregas')">📦 Entregas</div>
+            <div class="nav-tab" onclick="abrirTab('historico')">📊 Histórico</div>
+            <div class="nav-tab" onclick="abrirTab('ganhos')">💰 Ganhos</div>
+        </div>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="container">
+        <!-- Aba: Mapa -->
+        <div id="mapa" class="tab-content active">
+            <h2 class="page-title">🗺️ Mapa de Entregas</h2>
+            
+            <div class="map-container">
+                <div id="map"></div>
+                
+                <div class="sidebar">
+                    <div id="statusOffline" class="empty-state">
+                        <div>🔴</div>
+                        <h3>Você está offline</h3>
+                        <p>Ative o status para receber entregas</p>
+                    </div>
+
+                    <div id="statusOnline" style="display: none;">
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="entregasHoje">0</div>
+                                <div class="stat-label">Entregas Hoje</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="ganhosHoje">R$ 0</div>
+                                <div class="stat-label">Ganhos Hoje</div>
+                            </div>
+                        </div>
+
+                        <div id="entregaAtivaContainer" style="display: none;">
+                            <div class="entrega-ativa">
+                                <div class="entrega-header">
+                                    <div class="entrega-titulo">Entrega Ativa</div>
+                                    <div class="entrega-tempo" id="tempoEntrega">--:--</div>
+                                </div>
+                                <div class="entrega-info">
+                                    <div class="entrega-destino" id="destinoEntrega">Destino</div>
+                                    <div class="entrega-endereco" id="enderecoEntrega">Endereço</div>
+                                </div>
+                                <div class="progresso-entrega">
+                                    <div class="etapas">
+                                        <div class="etapa ativa" id="etapa1">
+                                            <div class="etapa-icon">🏪</div>
+                                            <div class="etapa-label">Loja</div>
+                                        </div>
+                                        <div class="etapa" id="etapa2">
+                                            <div class="etapa-icon">🚚</div>
+                                            <div class="etapa-label">Entrega</div>
+                                        </div>
+                                        <div class="etapa" id="etapa3">
+                                            <div class="etapa-icon">✅</div>
+                                            <div class="etapa-label">Concluído</div>
+                                        </div>
+                                    </div>
+                                    <div class="barra-progresso">
+                                        <div class="progresso" id="barraProgresso" style="width: 33%"></div>
+                                    </div>
+                                </div>
+                                <button class="btn-finalizar" onclick="finalizarEntrega()" id="btnFinalizar">
+                                    Finalizar Entrega
+                                </button>
+                            </div>
+                        </div>
+
+                        <h3 style="margin-bottom: 15px;">📦 Pedidos Disponíveis</h3>
+                        <div class="pedidos-list" id="pedidosDisponiveis">
+                            <div class="empty-state">
+                                <div>📦</div>
+                                <h3>Nenhum pedido disponível</h3>
+                                <p>Novos pedidos aparecerão aqui</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba: Entregas -->
+        <div id="entregas" class="tab-content">
+            <h2 class="page-title">📦 Minhas Entregas</h2>
+            <div id="listaEntregas">
+                <div class="empty-state">
+                    <div>🚚</div>
+                    <h3>Nenhuma entrega</h3>
+                    <p>Suas entregas aparecerão aqui</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba: Histórico -->
+        <div id="historico" class="tab-content">
+            <h2 class="page-title">📊 Histórico de Entregas</h2>
+            <div class="historico-list" id="historicoEntregas">
+                <div class="empty-state">
+                    <div>📊</div>
+                    <h3>Nenhum histórico</h3>
+                    <p>Seu histórico de entregas aparecerá aqui</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Aba: Ganhos -->
+        <div id="ganhos" class="tab-content">
+            <h2 class="page-title">💰 Meus Ganhos</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="ganhosSemana">R$ 0</div>
+                    <div class="stat-label">Esta Semana</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="ganhosMes">R$ 0</div>
+                    <div class="stat-label">Este Mês</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalEntregas">0</div>
+                    <div class="stat-label">Total Entregas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="mediaAvaliacao">0.0</div>
+                    <div class="stat-label">Avaliação Média</div>
+                </div>
+            </div>
+
+            <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-top: 20px;">
+                <h3 style="margin-bottom: 20px;">📈 Últimos Ganhos</h3>
+                <div id="listaGanhos">
+                    <div class="empty-state">
+                        <div>💰</div>
+                        <p>Seus ganhos aparecerão aqui</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuração do Supabase
+        const supabaseUrl = 'https://lsskaqudqvppfwfoxsih.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzc2thcXVkcXZwcGZ3Zm94c2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNDIxMzEsImV4cCI6MjA3NDgxODEzMX0.-M8bTf68RVY_kVrVyZ_BEfROLOrykauRYJzS2OnH6Fo';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Estado da aplicação
+        let map;
+        let userMarker;
+        let online = false;
+        let entregaAtiva = null;
+        let watchId = null;
+        let pedidosDisponiveis = [];
+
+        // Inicialização do Mapa
+        function inicializarMapa() {
+            map = L.map('map').setView([-23.5505, -46.6333], 13); // São Paulo
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Tentar obter localização do usuário
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        map.setView([latitude, longitude], 15);
+                        
+                        userMarker = L.marker([latitude, longitude])
+                            .addTo(map)
+                            .bindPopup('Sua localização atual')
+                            .openPopup();
+                    },
+                    (error) => {
+                        console.log('Erro ao obter localização:', error);
+                        // Usar localização padrão (São Paulo)
+                        userMarker = L.marker([-23.5505, -46.6333])
+                            .addTo(map)
+                            .bindPopup('Sua localização atual')
+                            .openPopup();
+                    }
+                );
+            }
+        }
+
+        // Funções de navegação
+        function abrirTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[onclick="abrirTab('${tabName}')"]`).classList.add('active');
+        }
+
+        // Controle de Status Online/Offline
+        function toggleStatus() {
+            const toggle = document.getElementById('statusToggle');
+            online = toggle.checked;
+
+            if (online) {
+                document.getElementById('statusText').textContent = 'Online';
+                document.getElementById('statusOffline').style.display = 'none';
+                document.getElementById('statusOnline').style.display = 'block';
+                
+                // Iniciar tracking de localização
+                iniciarTracking();
+                
+                // Carregar pedidos disponíveis
+                carregarPedidosDisponiveis();
+            } else {
+                document.getElementById('statusText').textContent = 'Offline';
+                document.getElementById('statusOffline').style.display = 'block';
+                document.getElementById('statusOnline').style.display = 'none';
+                
+                // Parar tracking
+                pararTracking();
+            }
+
+            // Atualizar status no banco
+            atualizarStatusMotoboy(online);
+        }
+
+        function iniciarTracking() {
+            if (navigator.geolocation) {
+                watchId = navigator.geolocation.watchPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        
+                        // Atualizar marcador no mapa
+                        if (userMarker) {
+                            userMarker.setLatLng([latitude, longitude]);
+                        } else {
+                            userMarker = L.marker([latitude, longitude])
+                                .addTo(map)
+                                .bindPopup('Sua localização atual');
+                        }
+
+                        // Centralizar mapa na localização
+                        map.setView([latitude, longitude], 15);
+
+                        // Atualizar localização no banco
+                        atualizarLocalizacao(latitude, longitude);
+                    },
+                    (error) => {
+                        console.log('Erro no tracking:', error);
+                    },
+                    {
+                        enableHighAccuracy: true,
+                        timeout: 5000,
+                        maximumAge: 0
+                    }
+                );
+            }
+        }
+
+        function pararTracking() {
+            if (watchId) {
+                navigator.geolocation.clearWatch(watchId);
+                watchId = null;
+            }
+        }
+
+        // Banco de Dados
+        async function atualizarStatusMotoboy(online) {
+            try {
+                const { error } = await supabase
+                    .from('motoboy_localizacao')
+                    .update({ 
+                        online: online,
+                        last_update: new Date().toISOString()
+                    })
+                    .eq('motoboy_id', 1); // Em uma app real, seria o ID do usuário logado
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Erro ao atualizar status:', error);
+            }
+        }
+
+        async function atualizarLocalizacao(lat, lng) {
+            try {
+                const { error } = await supabase
+                    .from('motoboy_localizacao')
+                    .update({ 
+                        latitude: lat,
+                        longitude: lng,
+                        last_update: new Date().toISOString()
+                    })
+                    .eq('motoboy_id', 1);
+
+                if (error) throw error;
+            } catch (error) {
+                console.error('Erro ao atualizar localização:', error);
+            }
+        }
+
+        // Pedidos Disponíveis
+        async function carregarPedidosDisponiveis() {
+            try {
+                // Buscar pedidos com status "pronto" (aguardando motoboy)
+                const { data: pedidos, error } = await supabase
+                    .from('pedidos')
+                    .select(`
+                        *,
+                        lojas(nome, endereco),
+                        clientes:usuarios!pedidos_cliente_id_fkey(nome, endereco)
+                    `)
+                    .eq('status', 'pronto')
+                    .is('motoboy_id', null);
+
+                if (error) throw error;
+
+                pedidosDisponiveis = pedidos || [];
+                renderizarPedidosDisponiveis();
+
+            } catch (error) {
+                console.error('Erro ao carregar pedidos:', error);
+            }
+        }
+
+        function renderizarPedidosDisponiveis() {
+            const container = document.getElementById('pedidosDisponiveis');
+            
+            if (pedidosDisponiveis.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div>📦</div>
+                        <h3>Nenhum pedido disponível</h3>
+                        <p>Novos pedidos aparecerão aqui</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = pedidosDisponiveis.map(pedido => `
+                <div class="pedido-card" onclick="selecionarPedido(${pedido.id})">
+                    <div class="pedido-header">
+                        <div class="pedido-id">Pedido #${pedido.id}</div>
+                        <div class="pedido-distancia">2.5 km</div>
+                    </div>
+                    <div class="pedido-info">
+                        <div class="pedido-loja">${pedido.lojas?.nome || 'Loja'}</div>
+                        <div class="pedido-endereco">${pedido.endereco_entrega || 'Endereço'}</div>
+                        <div class="pedido-total">R$ ${(pedido.total || 0).toFixed(2)}</div>
+                    </div>
+                    <div class="pedido-actions">
+                        <button class="btn-aceitar" onclick="event.stopPropagation(); aceitarPedido(${pedido.id})">
+                            ✅ Aceitar
+                        </button>
+                        <button class="btn-recusar" onclick="event.stopPropagation(); recusarPedido(${pedido.id})">
+                            ❌ Recusar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function aceitarPedido(pedidoId) {
+            try {
+                const { error } = await supabase
+                    .from('pedidos')
+                    .update({ 
+                        motoboy_id: 1, // ID do motoboy logado
+                        status: 'em_entrega',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', pedidoId);
+
+                if (error) throw error;
+
+                // Iniciar entrega
+                iniciarEntrega(pedidoId);
+                
+                alert('✅ Pedido aceito com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao aceitar pedido:', error);
+                alert('❌ Erro ao aceitar pedido. Tente novamente.');
+            }
+        }
+
+        function recusarPedido(pedidoId) {
+            // Remover pedido da lista
+            pedidosDisponiveis = pedidosDisponiveis.filter(p => p.id !== pedidoId);
+            renderizarPedidosDisponiveis();
+        }
+
+        function selecionarPedido(pedidoId) {
+            // Destacar pedido selecionado
+            document.querySelectorAll('.pedido-card').forEach(card => {
+                card.classList.remove('ativo');
+            });
+            event.currentTarget.classList.add('ativo');
+        }
+
+        // Controle de Entregas
+        function iniciarEntrega(pedidoId) {
+            const pedido = pedidosDisponiveis.find(p => p.id === pedidoId);
+            if (!pedido) return;
+
+            entregaAtiva = pedido;
+            
+            // Mostrar painel de entrega ativa
+            document.getElementById('entregaAtivaContainer').style.display = 'block';
+            document.getElementById('destinoEntrega').textContent = `Para: ${pedido.clientes?.nome || 'Cliente'}`;
+            document.getElementById('enderecoEntrega').textContent = pedido.endereco_entrega;
+
+            // Iniciar timer
+            iniciarTimerEntrega();
+
+            // Atualizar mapa com rota
+            adicionarRotaNoMapa(pedido);
+
+            // Remover pedido da lista de disponíveis
+            pedidosDisponiveis = pedidosDisponiveis.filter(p => p.id !== pedidoId);
+            renderizarPedidosDisponiveis();
+        }
+
+        function iniciarTimerEntrega() {
+            let tempo = 0;
+            const timerElement = document.getElementById('tempoEntrega');
+            
+            const timer = setInterval(() => {
+                tempo++;
+                const minutos = Math.floor(tempo / 60);
+                const segundos = tempo % 60;
+                timerElement.textContent = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+                
+                if (entregaAtiva === null) {
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }
+
+        function adicionarRotaNoMapa(pedido) {
+            // Em uma app real, usaríamos uma API de rotas como Google Maps ou OSRM
+            // Por enquanto, vamos simular com marcadores
+            
+            // Limpar marcadores anteriores
+            map.eachLayer((layer) => {
+                if (layer instanceof L.Marker && layer !== userMarker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Adicionar marcador da loja
+            L.marker([-23.5505, -46.6333]) // Posição simulada da loja
+                .addTo(map)
+                .bindPopup('🏪 Loja: ' + pedido.lojas?.nome)
+                .openPopup();
+
+            // Adicionar marcador do cliente
+            L.marker([-23.5605, -46.6433]) // Posição simulada do cliente
+                .addTo(map)
+                .bindPopup('👤 Cliente: ' + pedido.clientes?.nome)
+                .openPopup();
+        }
+
+        async function finalizarEntrega() {
+            if (!entregaAtiva) return;
+
+            try {
+                const { error } = await supabase
+                    .from('pedidos')
+                    .update({ 
+                        status: 'entregue',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', entregaAtiva.id);
+
+                if (error) throw error;
+
+                alert('🎉 Entrega finalizada com sucesso!');
+                
+                // Resetar estado
+                entregaAtiva = null;
+                document.getElementById('entregaAtivaContainer').style.display = 'none';
+                
+                // Recarregar pedidos disponíveis
+                carregarPedidosDisponiveis();
+
+            } catch (error) {
+                console.error('Erro ao finalizar entrega:', error);
+                alert('❌ Erro ao finalizar entrega. Tente novamente.');
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            inicializarMapa();
+            
+            // Carregar dados iniciais
+            carregarEstatisticas();
+        });
+
+        // Funções auxiliares (para demonstração)
+        function carregarEstatisticas() {
+            // Dados mockados para demonstração
+            document.getElementById('entregasHoje').textContent = '3';
+            document.getElementById('ganhosHoje').textContent = 'R$ 45,00';
+            document.getElementById('ganhosSemana').textContent = 'R$ 280,00';
+            document.getElementById('ganhosMes').textContent = 'R$ 1.150,00';
+            document.getElementById('totalEntregas').textContent = '47';
+            document.getElementById('mediaAvaliacao').textContent = '4.8';
+        }
+    </script>
+</body>
+  </html>
