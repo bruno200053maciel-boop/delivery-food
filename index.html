@@ -61,6 +61,16 @@
             cursor: pointer;
             position: relative;
             overflow: hidden;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            text-decoration: none;
+            color: inherit;
         }
 
         .profile-card::before {
@@ -71,11 +81,6 @@
             right: 0;
             height: 5px;
             background: linear-gradient(90deg, var(--color), var(--color-dark));
-        }
-
-        .profile-card:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
         }
 
         .profile-card.cliente {
@@ -135,11 +140,15 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: inline-block;
+            text-decoration: none;
         }
 
         .card-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+            text-decoration: none;
+            color: white;
         }
 
         .floating {
@@ -188,38 +197,38 @@
 
         <div class="cards-container">
             <!-- Card Cliente -->
-            <div class="profile-card cliente" onclick="window.location.href = 'cadastro-cliente.html'">
+            <a href="cadastro-cliente.html" class="profile-card cliente">
                 <div class="card-icon">👤</div>
                 <h2 class="card-title">Sou Cliente</h2>
                 <p class="card-description">
                     Quero fazer pedidos incríveis dos melhores restaurantes 
                     da minha região com entrega rápida e segura.
                 </p>
-                <button class="card-button">Fazer Pedidos</button>
-            </div>
+                <div class="card-button">Fazer Pedidos</div>
+            </a>
 
             <!-- Card Loja -->
-            <div class="profile-card loja" onclick="window.location.href = 'cadastro-loja.html'">
+            <a href="cadastro-loja.html" class="profile-card loja">
                 <div class="card-icon">🏪</div>
                 <h2 class="card-title">Minha Loja</h2>
                 <p class="card-description">
                     Sou restaurante ou loja e quero vender mais recebendo 
                     pedidos online e expandindo meu negócio.
                 </p>
-                <button class="card-button">Cadastrar Loja</button>
-            </div>
+                <div class="card-button">Cadastrar Loja</div>
+            </a>
 
             <!-- Card Motoboy -->
-            <div class="profile-card motoboy" onclick="window.location.href = '#'">
+            <a href="cadastro-motoboy.html" class="profile-card motoboy">
                 <div class="card-icon">🛵</div>
-                <div class="card-title">Sou Entregador</div>
+                <h2 class="card-title">Sou Entregador</h2>
                 <p class="card-description">
                     Quero fazer entregas e ganhar dinheiro com flexibilidade 
                     de horários e rotas inteligentes.
                 </p>
-                <button class="card-button">Começar a Entregar</button>
-            </div>
+                <div class="card-button">Começar a Entregar</div>
+            </a>
         </div>
     </div>
 </body>
-                    </html>
+</html>
