@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Entrar ou Cadastrar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .section {
+            padding: 40px;
+        }
+
+        .login-section {
+            background: white;
+        }
+
+        .cadastro-section {
+            background: #f8f9fa;
+            border-left: 1px solid #e9ecef;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #667eea;
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #333;
+            text-align: center;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-container label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .input-container input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .input-container input:focus + label,
+        .input-container input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 0.8rem;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102,126,234,0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .option-card {
+            background: white;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .option-card:hover {
+            transform: translateY(-3px);
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .option-card.cliente {
+            border-color: #007bff;
+        }
+
+        .option-card.loja {
+            border-color: #28a745;
+        }
+
+        .option-card.motoboy {
+            border-color: #fd7e14;
+        }
+
+        .option-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .option-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .option-description {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .voltar-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .voltar-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .voltar-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+
+            .cadastro-section {
+                border-left: none;
+                border-top: 1px solid #e9ecef;
+            }
+
+            .section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Seção LOGIN -->
+        <div class="section login-section">
+            <div class="logo">
+                <h1>🍔 FoodFlow</h1>
+                <p>Bem-vindo de volta!</p>
+            </div>
+
+            <h2 class="section-title">Fazer Login</h2>
+
+            <form id="loginForm">
+                <div class="input-container">
+                    <input type="email" id="loginEmail" placeholder=" " required>
+                    <label for="loginEmail">E-mail</label>
+                </div>
+
+                <div class="input-container">
+                    <input type="password" id="loginSenha" placeholder=" " required>
+                    <label for="loginSenha">Senha</label>
+                </div>
+
+                <button type="submit" class="btn-primary">
+                    🚀 Entrar na Minha Conta
+                </button>
+            </form>
+
+            <div id="loginMessage" class="message"></div>
+
+            <div class="voltar-link">
+                <a href="index.html">← Voltar para a página inicial</a>
+            </div>
+        </div>
+
+        <!-- Seção CADASTRO -->
+        <div class="section cadastro-section">
+            <h2 class="section-title">Criar Conta</h2>
+            <p style="text-align: center; color: #666; margin-bottom: 25px;">
+                Escolha como quer fazer parte do FoodFlow
+            </p>
+
+            <div class="options-grid">
+                <!-- Opção Cliente -->
+                <div class="option-card cliente" onclick="window.location.href='cadastro-cliente.html'">
+                    <div class="option-icon">👤</div>
+                    <div class="option-title">Sou Cliente</div>
+                    <div class="option-description">
+                        Quero fazer pedidos dos melhores restaurantes com entrega rápida
+                    </div>
+                </div>
+
+                <!-- Opção Loja -->
+                <div class="option-card loja" onclick="window.location.href='cadastro-loja.html'">
+                    <div class="option-icon">🏪</div>
+                    <div class="option-title">Minha Loja</div>
+                    <div class="option-description">
+                        Sou restaurante e quero vender mais recebendo pedidos online
+                    </div>
+                </div>
+
+                <!-- Opção Motoboy -->
+                <div class="option-card motoboy" onclick="window.location.href='cadastro-motoboy.html'">
+                    <div class="option-icon">🛵</div>
+                    <div class="option-title">Sou Entregador</div>
+                    <div class="option-description">
+                        Quero fazer entregas e ganhar dinheiro com flexibilidade
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9rem;">
+                ⚡ Cadastro rápido e gratuito
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuração do Supabase
+        const supabaseUrl = 'https://lsskaqudqvppfwfoxsih.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzc2thcXVkcXZwcGZ3Zm94c2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNDIxMzEsImV4cCI6MjA3NDgxODEzMX0.-M8bTf68RVY_kVrVyZ_BEfROLOrykauRYJzS2OnH6Fo';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        // Sistema de Login
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
+
+            mostrarMensagem('🔄 Verificando credenciais...', 'loading', 'loginMessage');
+
+            try {
+                // Buscar usuário no banco
+                const { data: usuarios, error } = await supabase
+                    .from('usuarios')
+                    .select('*')
+                    .eq('email', email)
+                    .eq('senha', senha)
+                    .single();
+
+                if (error) throw new Error('Usuário não encontrado ou senha incorreta');
+
+                if (!usuarios) {
+                    throw new Error('E-mail ou senha incorretos');
+                }
+
+                // Login bem-sucedido
+                mostrarMensagem('🎉 Login realizado! Redirecionando...', 'success', 'loginMessage');
+                
+                // Salvar usuário na sessão (em uma app real usaríamos localStorage)
+                sessionStorage.setItem('usuarioLogado', JSON.stringify(usuarios));
+                
+                // Redirecionar para dashboard baseado no tipo
+                setTimeout(() => {
+                    switch(usuarios.tipo) {
+                        case 'cliente':
+                            window.location.href = 'dashboard-cliente.html';
+                            break;
+                        case 'loja':
+                            window.location.href = 'dashboard-loja.html';
+                            break;
+                        case 'motoboy':
+                            window.location.href = 'dashboard-motoboy.html';
+                            break;
+                        default:
+                            window.location.href = 'dashboard-cliente.html';
+                    }
+                }, 2000);
+
+            } catch (error) {
+                mostrarMensagem(`❌ ${error.message}`, 'error', 'loginMessage');
+            }
+        });
+
+        function mostrarMensagem(texto, tipo, elementoId) {
+            const messageDiv = document.getElementById(elementoId);
+            messageDiv.textContent = texto;
+            messageDiv.className = `message ${tipo}`;
+            messageDiv.style.display = 'block';
+            
+            if (tipo === 'error') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+    </script>
+</body>
+  </html>
