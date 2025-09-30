@@ -534,19 +534,19 @@
             
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-value" id="totalPedidos">12</div>
+                    <div class="stat-value" id="totalPedidos">0</div>
                     <div class="stat-label">Pedidos Hoje</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="totalVendas">R$ 348,50</div>
+                    <div class="stat-value" id="totalVendas">R$ 0,00</div>
                     <div class="stat-label">Vendas Hoje</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="produtosAtivos">8</div>
+                    <div class="stat-value" id="produtosAtivos">0</div>
                     <div class="stat-label">Produtos Ativos</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value" id="taxaConversao">68%</div>
+                    <div class="stat-value" id="taxaConversao">0%</div>
                     <div class="stat-label">Taxa de Conversão</div>
                 </div>
             </div>
@@ -554,7 +554,11 @@
             <div style="background: white; border-radius: 10px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                 <h3 style="margin-bottom: 20px; color: #333;">📈 Pedidos Recentes</h3>
                 <div id="pedidosRecentes">
-                    <!-- Pedidos recentes carregados via JavaScript -->
+                    <div class="empty-state">
+                        <div>📦</div>
+                        <h3>Nenhum pedido recente</h3>
+                        <p>Seus pedidos aparecerão aqui</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -569,7 +573,11 @@
             </div>
 
             <div class="produtos-grid" id="produtosGrid">
-                <!-- Produtos carregados via JavaScript -->
+                <div class="empty-state">
+                    <div>🍕</div>
+                    <h3>Nenhum produto cadastrado</h3>
+                    <p>Adicione seus primeiros produtos para começar a vender!</p>
+                </div>
             </div>
         </div>
 
@@ -586,7 +594,11 @@
             </div>
 
             <div class="pedidos-grid" id="pedidosGrid">
-                <!-- Pedidos carregados via JavaScript -->
+                <div class="empty-state">
+                    <div>📦</div>
+                    <h3>Nenhum pedido encontrado</h3>
+                    <p>Seus pedidos aparecerão aqui</p>
+                </div>
             </div>
         </div>
 
@@ -706,7 +718,58 @@
         // Estado da aplicação
         let produtos = [];
         let pedidos = [];
-        let lojaId = 1; // Em uma app real, viria do usuário logado
+        let lojaId = null;
+
+        // 🔥 FUNÇÃO NOVA: Buscar ID real da loja
+        async function obterLojaId() {
+            try {
+                // Em uma app real, pegaríamos do usuário logado
+                // Por enquanto, vamos buscar a primeira loja disponível
+                const { data: lojas, error } = await supabase
+                    .from('lojas')
+                    .select('id, nome, email')
+                    .order('id', { ascending: true })
+                    .limit(1);
+
+                if (error) throw error;
+
+                if (lojas && lojas.length > 0) {
+                    console.log('Loja encontrada:', lojas[0]);
+                    return lojas[0].id;
+                } else {
+                    console.warn('Nenhuma loja encontrada, criando uma nova...');
+                    // Se não existir loja, cria uma
+                    return await criarLojaPadrao();
+                }
+            } catch (error) {
+                console.error('Erro ao obter loja_id:', error);
+                return 1; // Fallback
+            }
+        }
+
+        // 🔥 FUNÇÃO NOVA: Criar loja padrão se não existir
+        async function criarLojaPadrao() {
+            try {
+                const { data: loja, error } = await supabase
+                    .from('lojas')
+                    .insert([{
+                        nome: 'Minha Loja',
+                        descricao: 'Minha loja no FoodFlow',
+                        categoria: 'restaurante',
+                        endereco: 'Endereço da loja',
+                        telefone: '(11) 9999-9999',
+                        aberta: true
+                    }])
+                    .select();
+
+                if (error) throw error;
+                
+                return loja[0].id;
+            } catch (error) {
+                console.error('Erro ao criar loja:', error);
+                return 1;
+            }
+        }
 
         // Funções de navegação
         function abrirTab(tabName) {
@@ -763,7 +826,14 @@
 
         // Carregar Produtos
         async function carregarProdutos() {
+            if (!lojaId) {
+                console.log('Aguardando lojaId...');
+                return;
+            }
+
             try {
+                console.log('Carregando produtos para loja:', lojaId);
+                
                 const { data, error } = await supabase
                     .from('produtos')
                     .select('*')
@@ -773,6 +843,7 @@
                 if (error) throw error;
 
                 produtos = data || [];
+                console.log('Produtos carregados:', produtos);
                 renderizarProdutos();
 
             } catch (error) {
@@ -819,6 +890,11 @@
         // Salvar Produto
         document.getElementById('formProduto').addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            if (!lojaId) {
+                alert('❌ Erro: Loja não identificada. Recarregue a página.');
+                return;
+            }
 
             const produto = {
                 loja_id: lojaId,
@@ -882,13 +958,12 @@
 
         // Carregar Pedidos
         async function carregarPedidos(filtro = 'todos') {
+            if (!lojaId) return;
+
             try {
                 let query = supabase
                     .from('pedidos')
-                    .select(`
-                        *,
-                        clientes:usuarios!pedidos_cliente_id_fkey(nome, endereco)
-                    `)
+                    .select('*')
                     .eq('loja_id', lojaId)
                     .order('created_at', { ascending: false });
 
@@ -932,7 +1007,7 @@
                     </div>
                     
                     <div class="pedido-cliente">
-                        <div class="cliente-nome">${pedido.clientes?.nome || 'Cliente'}</div>
+                        <div class="cliente-nome">Cliente #${pedido.cliente_id}</div>
                         <div class="cliente-endereco">${pedido.endereco_entrega || 'Endereço não informado'}</div>
                     </div>
 
@@ -999,20 +1074,49 @@
 
         // Carregar Dashboard
         async function carregarDashboard() {
-            // Em uma app real, buscaríamos estatísticas reais do banco
-            // Por enquanto, vamos usar dados mockados para demonstração
-            
-            const hoje = new Date().toLocaleDateString('pt-BR');
-            document.getElementById('totalPedidos').textContent = '12';
-            document.getElementById('totalVendas').textContent = 'R$ 348,50';
-            document.getElementById('produtosAtivos').textContent = '8';
-            document.getElementById('taxaConversao').textContent = '68%';
+            if (!lojaId) return;
+
+            try {
+                // Buscar estatísticas reais
+                const hoje = new Date().toISOString().split('T')[0];
+                
+                // Pedidos de hoje
+                const { data: pedidosHoje, error: pedidosError } = await supabase
+                    .from('pedidos')
+                    .select('total')
+                    .eq('loja_id', lojaId)
+                    .gte('created_at', hoje);
+
+                if (!pedidosError && pedidosHoje) {
+                    const totalPedidos = pedidosHoje.length;
+                    const totalVendas = pedidosHoje.reduce((sum, pedido) => sum + (pedido.total || 0), 0);
+                    
+                    document.getElementById('totalPedidos').textContent = totalPedidos;
+                    document.getElementById('totalVendas').textContent = `R$ ${totalVendas.toFixed(2)}`;
+                }
+
+                // Produtos ativos
+                const { data: produtosAtivos, error: produtosError } = await supabase
+                    .from('produtos')
+                    .select('id')
+                    .eq('loja_id', lojaId)
+                    .eq('disponivel', true);
+
+                if (!produtosError && produtosAtivos) {
+                    document.getElementById('produtosAtivos').textContent = produtosAtivos.length;
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
 
             // Carregar pedidos recentes
             await carregarPedidosRecentes();
         }
 
         async function carregarPedidosRecentes() {
+            if (!lojaId) return;
+
             try {
                 const { data, error } = await supabase
                     .from('pedidos')
@@ -1047,6 +1151,11 @@
 
         // Configurações
         async function salvarConfiguracoes() {
+            if (!lojaId) {
+                alert('❌ Loja não identificada');
+                return;
+            }
+
             const config = {
                 nome: document.getElementById('configNome').value,
                 descricao: document.getElementById('configDescricao').value,
@@ -1072,11 +1181,42 @@
             }
         }
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', function() {
+        // 🔥 INICIALIZAÇÃO CORRIGIDA
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Inicializando dashboard da loja...');
+            
+            // Primeiro obtém o ID real da loja
+            lojaId = await obterLojaId();
+            console.log('Loja ID definido como:', lojaId);
+            
+            // Atualiza o header com informações da loja
+            await atualizarInformacoesLoja();
+            
+            // Depois carrega os dados
             carregarDashboard();
-            // Em uma app real, carregaríamos os dados da loja logada
         });
+
+        // 🔥 FUNÇÃO NOVA: Atualizar informações da loja no header
+        async function atualizarInformacoesLoja() {
+            if (!lojaId) return;
+
+            try {
+                const { data: loja, error } = await supabase
+                    .from('lojas')
+                    .select('nome, email')
+                    .eq('id', lojaId)
+                    .single();
+
+                if (!error && loja) {
+                    document.getElementById('userName').textContent = loja.nome;
+                    if (loja.email) {
+                        document.getElementById('userEmail').textContent = loja.email;
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao carregar informações da loja:', error);
+            }
+        }
     </script>
 </body>
-  </html>
+    </html>
