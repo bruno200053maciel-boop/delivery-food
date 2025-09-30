@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodFlow - Cadastro Cliente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-container input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .input-container label {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            background: white;
+            padding: 0 5px;
+        }
+
+        .input-container input:focus {
+            border-color: #007bff;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .input-container input:focus + label,
+        .input-container input:not(:placeholder-shown) + label {
+            top: 0;
+            font-size: 0.8rem;
+            color: #007bff;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,123,255,0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: #007bff;
+            border: 2px solid #007bff;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #007bff;
+            color: white;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>🍔 FoodFlow</h1>
+            <p>Crie sua conta de cliente</p>
+        </div>
+
+        <form id="cadastroForm">
+            <div class="input-container">
+                <input type="text" id="nome" placeholder=" " required>
+                <label for="nome">Nome completo</label>
+            </div>
+
+            <div class="input-container">
+                <input type="email" id="email" placeholder=" " required>
+                <label for="email">E-mail</label>
+            </div>
+
+            <div class="input-container">
+                <input type="tel" id="telefone" placeholder=" ">
+                <label for="telefone">Telefone</label>
+            </div>
+
+            <div class="input-container">
+                <input type="password" id="senha" placeholder=" " required minlength="6">
+                <label for="senha">Senha</label>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="endereco" placeholder=" ">
+                <label for="endereco">Endereço completo</label>
+            </div>
+
+            <button type="submit" class="btn-primary">
+                🎉 Criar Minha Conta
+            </button>
+
+            <button type="button" class="btn-secondary" onclick="voltarParaHome()">
+                ← Voltar para Home
+            </button>
+        </form>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script>
+        const supabaseUrl = 'https://lsskaqudqvppfwfoxsih.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxzc2thcXVkcXZwcGZ3Zm94c2loIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTkyNDIxMzEsImV4cCI6MjA3NDgxODEzMX0.-M8bTf68RVY_kVrVyZ_BEfROLOrykauRYJzS2OnH6Fo';
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        document.getElementById('cadastroForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usuario = {
+                tipo: 'cliente',
+                nome: document.getElementById('nome').value,
+                email: document.getElementById('email').value,
+                senha: document.getElementById('senha').value,
+                telefone: document.getElementById('telefone').value,
+                endereco: document.getElementById('endereco').value
+            };
+
+            mostrarMensagem('🔄 Cadastrando...', 'loading');
+
+            try {
+                const { data, error } = await supabase
+                    .from('usuarios')
+                    .insert([usuario])
+                    .select();
+
+                if (error) {
+                    throw new Error(error.message);
+                }
+
+                mostrarMensagem('🎉 Conta criada com sucesso! Redirecionando...', 'success');
+                document.getElementById('cadastroForm').reset();
+                
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+
+            } catch (error) {
+                let mensagemErro = error.message;
+                
+                if (error.message.includes('duplicate key')) {
+                    mensagemErro = '❌ Este e-mail já está cadastrado!';
+                } else if (error.message.includes('network')) {
+                    mensagemErro = '🌐 Erro de conexão. Verifique sua internet.';
+                }
+                
+                mostrarMensagem(mensagemErro, 'error');
+            }
+        });
+
+        function mostrarMensagem(texto, tipo) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = texto;
+            messageDiv.className = `message ${tipo}`;
+            messageDiv.style.display = 'block';
+            
+            if (tipo === 'error') {
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+        }
+
+        function voltarParaHome() {
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{2})(\d)/, '($1) $2');
+                value = value.replace(/(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+    </script>
+</body>
+</html>
