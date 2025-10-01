@@ -51,6 +51,72 @@
             opacity: 0.8;
         }
 
+        .search-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 15px 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            background: transparent;
+        }
+
+        .cart-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .cart-btn:hover {
+            background: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #e1e5e9;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+
         .nav-tabs {
             background: white;
             border-bottom: 2px solid #e9ecef;
@@ -116,7 +182,7 @@
 
         .loja-card {
             background: white;
-            border-radius: 10px;
+            border-radius: 15px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
@@ -128,10 +194,16 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.15);
         }
 
+        .loja-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
         .loja-nome {
             font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 10px;
             color: #007bff;
         }
 
@@ -141,8 +213,7 @@
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 0.8rem;
-            display: inline-block;
-            margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .loja-descricao {
@@ -151,11 +222,18 @@
             line-height: 1.4;
         }
 
+        .loja-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
         .loja-status {
             display: flex;
             align-items: center;
             gap: 5px;
-            font-size: 0.9rem;
         }
 
         .status-aberto {
@@ -170,65 +248,75 @@
         .produtos-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 15px;
+            gap: 20px;
             margin-top: 20px;
         }
 
         .produto-card {
             background: white;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
         }
 
         .produto-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.15);
         }
 
         .produto-nome {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            color: #333;
         }
 
         .produto-descricao {
             color: #666;
+            margin-bottom: 15px;
+            line-height: 1.4;
             font-size: 0.9rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
+        }
+
+        .produto-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .produto-preco {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 700;
             color: #28a745;
-            margin-bottom: 10px;
         }
 
-        .btn-adicionar {
+        .btn-add-cart {
             background: #007bff;
             color: white;
             border: none;
             padding: 8px 15px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 0.9rem;
             transition: all 0.3s ease;
-            width: 100%;
         }
 
-        .btn-adicionar:hover {
+        .btn-add-cart:hover {
             background: #0056b3;
+            transform: scale(1.05);
         }
 
         /* Carrinho */
-        .carrinho-items {
+        .carrinho-container {
             background: white;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .carrinho-items {
             margin-bottom: 20px;
         }
 
@@ -251,6 +339,7 @@
         .item-nome {
             font-weight: 600;
             margin-bottom: 5px;
+            color: #333;
         }
 
         .item-preco {
@@ -274,14 +363,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .btn-quantidade:hover {
+            background: #e9ecef;
         }
 
         .carrinho-total {
-            background: white;
+            background: #f8f9fa;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
+            border: 2px solid #e9ecef;
         }
 
         .total-valor {
@@ -355,18 +449,68 @@
         .pedido-total {
             font-weight: 600;
             color: #28a745;
+            text-align: right;
+            margin-top: 10px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 40px;
+        /* Modal Loja */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e1e5e9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f8f9fa;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
             color: #666;
+            padding: 5px;
         }
 
-        .empty-state i {
-            font-size: 3rem;
-            margin-bottom: 15px;
-            opacity: 0.5;
+        .modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
         }
 
         .btn-voltar {
@@ -377,10 +521,23 @@
             border-radius: 5px;
             cursor: pointer;
             margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
 
         .btn-voltar:hover {
             background: #545b62;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
 
         @media (max-width: 768px) {
@@ -407,6 +564,11 @@
             .produtos-grid {
                 grid-template-columns: 1fr;
             }
+
+            .modal-content {
+                margin: 10px;
+                max-height: 95vh;
+            }
         }
     </style>
 </head>
@@ -425,6 +587,23 @@
         </div>
     </div>
 
+    <!-- Busca -->
+    <div class="search-container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Buscar restaurantes ou produtos...">
+            <button class="cart-btn" onclick="toggleCarrinho()">
+                🛒 Carrinho (<span id="cartCount">0</span>)
+            </button>
+        </div>
+        <div class="search-filters">
+            <button class="filter-btn active" onclick="filtrarLojas('todos')">Todos</button>
+            <button class="filter-btn" onclick="filtrarLojas('restaurante')">🍽️ Restaurantes</button>
+            <button class="filter-btn" onclick="filtrarLojas('lanchonete')">🍔 Lanchonetes</button>
+            <button class="filter-btn" onclick="filtrarLojas('pizzaria')">🍕 Pizzarias</button>
+            <button class="filter-btn" onclick="filtrarLojas('mercado')">🛒 Mercados</button>
+        </div>
+    </div>
+
     <!-- Navegação -->
     <div class="nav-tabs">
         <div class="nav-container">
@@ -435,7 +614,7 @@
         </div>
     </div>
 
-    <!-- Conteúdo -->
+    <!-- Conteúdo Principal -->
     <div class="container">
         <!-- Aba: Lojas -->
         <div id="lojas" class="tab-content active">
@@ -448,17 +627,22 @@
         <!-- Aba: Carrinho -->
         <div id="carrinho" class="tab-content">
             <h2 class="page-title">🛒 Meu Carrinho</h2>
-            <div class="carrinho-items" id="carrinhoItems">
-                <div class="empty-state">
-                    <div>🛒</div>
-                    <h3>Carrinho vazio</h3>
-                    <p>Adicione produtos das lojas para ver aqui</p>
+            <div class="carrinho-container">
+                <div class="carrinho-items" id="carrinhoItems">
+                    <div class="empty-state">
+                        <div>🛒</div>
+                        <h3>Carrinho vazio</h3>
+                        <p>Adicione produtos das lojas para ver aqui</p>
+                    </div>
                 </div>
-            </div>
-            <div class="carrinho-total" id="carrinhoTotal" style="display: none;">
-                <h3>Total do Pedido</h3>
-                <div class="total-valor" id="totalValor">R$ 0,00</div>
-                <button class="btn-finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
+                
+                <div class="carrinho-total" id="carrinhoTotal" style="display: none;">
+                    <h3>Total do Pedido</h3>
+                    <div class="total-valor" id="totalValor">R$ 0,00</div>
+                    <button class="btn-finalizar" onclick="finalizarPedido()">
+                        ✅ Finalizar Pedido
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -490,16 +674,24 @@
                 <div style="margin-bottom: 20px;">
                     <strong>Endereço:</strong> <span id="perfilEndereco">Rua Exemplo, 123 - São Paulo, SP</span>
                 </div>
-                <button class="btn-finalizar" style="background: #007bff;" onclick="editarPerfil()">Editar Perfil</button>
+                <button class="btn-finalizar" style="background: #007bff;" onclick="editarPerfil()">
+                    ✏️ Editar Perfil
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Produtos da Loja (aparece quando clica em uma loja) -->
-        <div id="produtosLoja" class="tab-content">
-            <button class="btn-voltar" onclick="voltarParaLojas()">← Voltar para Lojas</button>
-            <h2 class="page-title" id="nomeLoja">🍔 Loja</h2>
-            <div class="produtos-grid" id="produtosGrid">
-                <!-- Produtos carregados via JavaScript -->
+    <!-- Modal Produtos da Loja -->
+    <div class="modal" id="modalLoja">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modalLojaTitulo">🍽️ Produtos da Loja</div>
+                <button class="close-modal" onclick="fecharModalLoja()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="produtos-grid" id="produtosLoja">
+                    <!-- Produtos da loja carregados via JavaScript -->
+                </div>
             </div>
         </div>
     </div>
@@ -512,12 +704,14 @@
         const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
         // Estado da aplicação
+        let lojas = [];
+        let produtos = [];
         let carrinho = [];
-        let lojaAtual = null;
+        let lojaSelecionada = null;
+        let clienteId = 1; // Em app real, viria do usuário logado
 
         // Funções de navegação
         function abrirTab(tabName) {
-            // Esconde todas as tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -525,160 +719,236 @@
                 tab.classList.remove('active');
             });
 
-            // Mostra a tab selecionada
             document.getElementById(tabName).classList.add('active');
             document.querySelector(`[onclick="abrirTab('${tabName}')"]`).classList.add('active');
         }
 
-        function verProdutos(loja) {
-            lojaAtual = loja;
-            document.getElementById('nomeLoja').textContent = `🍔 ${loja.nome}`;
-            abrirTab('produtosLoja');
-            carregarProdutos(loja.id);
-        }
-
-        function voltarParaLojas() {
-            abrirTab('lojas');
-        }
-
-        // Carregar lojas - BUSCA NO BANCO REAL
+        // Carregar Lojas - BUSCA REAL NO BANCO
         async function carregarLojas() {
             try {
-                const { data: lojas, error } = await supabase
+                console.log('🔄 Carregando lojas...');
+                
+                const { data, error } = await supabase
                     .from('lojas')
                     .select('*')
-                    .eq('aberta', true);
+                    .eq('aberta', true)
+                    .order('nome');
 
-                if (error) throw error;
-
-                const grid = document.getElementById('lojasGrid');
-                grid.innerHTML = '';
-
-                if (lojas.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><div>🏪</div><h3>Nenhuma loja disponível</h3><p>Volte mais tarde</p></div>';
-                    return;
+                if (error) {
+                    console.error('Erro ao carregar lojas:', error);
+                    throw error;
                 }
 
-                lojas.forEach(loja => {
-                    const card = document.createElement('div');
-                    card.className = 'loja-card';
-                    card.onclick = () => verProdutos(loja);
-                    
-                    card.innerHTML = `
+                lojas = data || [];
+                console.log('✅ Lojas carregadas:', lojas);
+                renderizarLojas();
+
+            } catch (error) {
+                console.error('❌ Erro ao carregar lojas:', error);
+                mostrarErro('lojasGrid', 'Erro ao carregar lojas. Tente novamente.');
+            }
+        }
+
+        function renderizarLojas() {
+            const grid = document.getElementById('lojasGrid');
+            
+            if (!lojas || lojas.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div>🏪</div>
+                        <h3>Nenhuma loja disponível</h3>
+                        <p>As lojas aparecerão aqui quando estiverem abertas</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = lojas.map(loja => `
+                <div class="loja-card" onclick="abrirModalLoja(${loja.id})">
+                    <div class="loja-header">
                         <div class="loja-nome">${loja.nome}</div>
-                        <div class="loja-categoria">${loja.categoria || 'Geral'}</div>
-                        <div class="loja-descricao">${loja.descricao || 'Sem descrição'}</div>
+                        <div class="loja-categoria">${getCategoriaIcon(loja.categoria)} ${loja.categoria}</div>
+                    </div>
+                    <div class="loja-descricao">${loja.descricao || 'Sem descrição'}</div>
+                    <div class="loja-info">
+                        <span>📍 ${loja.endereco || 'Endereço não informado'}</span>
                         <div class="loja-status">
                             <span class="status-aberto">●</span> Aberto agora
                         </div>
-                    `;
-                    
-                    grid.appendChild(card);
-                });
-
-            } catch (error) {
-                console.error('Erro ao carregar lojas:', error);
-            }
+                    </div>
+                </div>
+            `).join('');
         }
 
-        // Carregar produtos - BUSCA PRODUTOS REAIS DO BANCO
-        async function carregarProdutos(lojaId) {
+        function getCategoriaIcon(categoria) {
+            const icons = {
+                'restaurante': '🍽️',
+                'lanchonete': '🍔',
+                'pizzaria': '🍕',
+                'mercado': '🛒',
+                'outros': '🏪'
+            };
+            return icons[categoria] || '🏪';
+        }
+
+        // Carregar Produtos da Loja - BUSCA REAL NO BANCO
+        async function carregarProdutosLoja(lojaId) {
             try {
-                const { data: produtos, error } = await supabase
+                console.log('🔄 Carregando produtos da loja:', lojaId);
+                
+                const { data, error } = await supabase
                     .from('produtos')
                     .select('*')
                     .eq('loja_id', lojaId)
-                    .eq('disponivel', true);
+                    .eq('disponivel', true)
+                    .order('nome');
 
-                if (error) throw error;
-
-                const grid = document.getElementById('produtosGrid');
-                grid.innerHTML = '';
-
-                if (!produtos || produtos.length === 0) {
-                    grid.innerHTML = '<div class="empty-state"><div>🍽️</div><h3>Nenhum produto disponível</h3><p>Esta loja ainda não cadastrou produtos</p></div>';
-                    return;
+                if (error) {
+                    console.error('Erro ao carregar produtos:', error);
+                    throw error;
                 }
 
-                produtos.forEach(produto => {
-                    const card = document.createElement('div');
-                    card.className = 'produto-card';
-                    
-                    card.innerHTML = `
-                        <div class="produto-nome">${produto.nome}</div>
-                        <div class="produto-descricao">${produto.descricao || 'Sem descrição'}</div>
-                        <div class="produto-preco">R$ ${(produto.preco || 0).toFixed(2)}</div>
-                        <button class="btn-adicionar" onclick="adicionarAoCarrinho(${JSON.stringify(produto).replace(/"/g, '&quot;')})">
-                            Adicionar ao Carrinho
-                        </button>
-                    `;
-                    
-                    grid.appendChild(card);
-                });
+                produtos = data || [];
+                console.log('✅ Produtos carregados:', produtos);
+                renderizarProdutosLoja();
 
             } catch (error) {
-                console.error('Erro ao carregar produtos:', error);
+                console.error('❌ Erro ao carregar produtos:', error);
+                mostrarErro('produtosLoja', 'Erro ao carregar produtos da loja.');
             }
         }
 
-        // Carrinho
+        function renderizarProdutosLoja() {
+            const grid = document.getElementById('produtosLoja');
+            
+            if (!produtos || produtos.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div>🍕</div>
+                        <h3>Nenhum produto disponível</h3>
+                        <p>Esta loja ainda não cadastrou produtos</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = produtos.map(produto => `
+                <div class="produto-card">
+                    <div class="produto-nome">${produto.nome}</div>
+                    <div class="produto-descricao">${produto.descricao || 'Sem descrição'}</div>
+                    <div class="produto-footer">
+                        <div class="produto-preco">R$ ${(produto.preco || 0).toFixed(2)}</div>
+                        <button class="btn-add-cart" onclick="adicionarAoCarrinho(${JSON.stringify(produto).replace(/"/g, '&quot;')})">
+                            ➕ Adicionar
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Modal da Loja
+        async function abrirModalLoja(lojaId) {
+            const loja = lojas.find(l => l.id === lojaId);
+            if (!loja) {
+                alert('❌ Loja não encontrada');
+                return;
+            }
+
+            lojaSelecionada = loja;
+            document.getElementById('modalLojaTitulo').textContent = `🍽️ ${loja.nome}`;
+            document.getElementById('modalLoja').classList.add('active');
+            
+            await carregarProdutosLoja(lojaId);
+        }
+
+        function fecharModalLoja() {
+            document.getElementById('modalLoja').classList.remove('active');
+            lojaSelecionada = null;
+        }
+
+        // Sistema de Carrinho
         function adicionarAoCarrinho(produto) {
+            if (!lojaSelecionada) {
+                alert('❌ Selecione uma loja primeiro');
+                return;
+            }
+
+            // Verificar se o produto é da mesma loja do carrinho
+            if (carrinho.length > 0) {
+                const lojaCarrinho = carrinho[0].loja_id;
+                if (lojaCarrinho !== produto.loja_id) {
+                    if (!confirm('⚠️ Seu carrinho tem produtos de outra loja. Deseja esvaziar o carrinho e adicionar este produto?')) {
+                        return;
+                    }
+                    carrinho = [];
+                }
+            }
+
             const itemExistente = carrinho.find(item => item.id === produto.id);
             
             if (itemExistente) {
-                itemExistente.quantidade++;
+                itemExistente.quantidade += 1;
             } else {
                 carrinho.push({
                     ...produto,
-                    quantidade: 1
+                    quantidade: 1,
+                    loja_nome: lojaSelecionada.nome
                 });
             }
             
             atualizarCarrinho();
-            abrirTab('carrinho');
+            mostrarFeedback(`✅ ${produto.nome} adicionado ao carrinho!`);
         }
 
         function atualizarCarrinho() {
-            const itemsDiv = document.getElementById('carrinhoItems');
-            const totalDiv = document.getElementById('carrinhoTotal');
-            
+            const cartCount = document.getElementById('cartCount');
+            const cartItems = document.getElementById('carrinhoItems');
+            const cartTotal = document.getElementById('carrinhoTotal');
+            const totalValor = document.getElementById('totalValor');
+
+            // Atualizar contador
+            const totalItens = carrinho.reduce((total, item) => total + item.quantidade, 0);
+            cartCount.textContent = totalItens;
+
+            // Atualizar itens
             if (carrinho.length === 0) {
-                itemsDiv.innerHTML = `
+                cartItems.innerHTML = `
                     <div class="empty-state">
                         <div>🛒</div>
                         <h3>Carrinho vazio</h3>
                         <p>Adicione produtos das lojas para ver aqui</p>
                     </div>
                 `;
-                totalDiv.style.display = 'none';
-                return;
+                cartTotal.style.display = 'none';
+            } else {
+                let html = '';
+                let total = 0;
+
+                carrinho.forEach((item, index) => {
+                    const subtotal = (item.preco || 0) * item.quantidade;
+                    total += subtotal;
+                    
+                    html += `
+                        <div class="carrinho-item">
+                            <div class="item-info">
+                                <div class="item-nome">${item.nome}</div>
+                                <div class="item-preco">R$ ${subtotal.toFixed(2)}</div>
+                                <small style="color: #666;">${item.loja_nome}</small>
+                            </div>
+                            <div class="item-quantidade">
+                                <button class="btn-quantidade" onclick="alterarQuantidade(${index}, -1)">-</button>
+                                <span style="min-width: 30px; text-align: center;">${item.quantidade}</span>
+                                <button class="btn-quantidade" onclick="alterarQuantidade(${index}, 1)">+</button>
+                                <button class="btn-quantidade" onclick="removerDoCarrinho(${index})" style="margin-left: 10px; background: #dc3545; color: white;">🗑️</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                cartItems.innerHTML = html;
+                totalValor.textContent = `R$ ${total.toFixed(2)}`;
+                cartTotal.style.display = 'block';
             }
-
-            let html = '';
-            let total = 0;
-
-            carrinho.forEach((item, index) => {
-                const subtotal = (item.preco || 0) * item.quantidade;
-                total += subtotal;
-                
-                html += `
-                    <div class="carrinho-item">
-                        <div class="item-info">
-                            <div class="item-nome">${item.nome}</div>
-                            <div class="item-preco">R$ ${subtotal.toFixed(2)}</div>
-                        </div>
-                        <div class="item-quantidade">
-                            <button class="btn-quantidade" onclick="alterarQuantidade(${index}, -1)">-</button>
-                            <span>${item.quantidade}</span>
-                            <button class="btn-quantidade" onclick="alterarQuantidade(${index}, 1)">+</button>
-                        </div>
-                    </div>
-                `;
-            });
-
-            itemsDiv.innerHTML = html;
-            document.getElementById('totalValor').textContent = `R$ ${total.toFixed(2)}`;
-            totalDiv.style.display = 'block';
         }
 
         function alterarQuantidade(index, mudanca) {
@@ -691,42 +961,257 @@
             atualizarCarrinho();
         }
 
+        function removerDoCarrinho(index) {
+            const produtoNome = carrinho[index].nome;
+            carrinho.splice(index, 1);
+            atualizarCarrinho();
+            mostrarFeedback(`🗑️ ${produtoNome} removido do carrinho`);
+        }
+
+        function toggleCarrinho() {
+            abrirTab('carrinho');
+        }
+
+        // Finalizar Pedido
         async function finalizarPedido() {
-            if (carrinho.length === 0) return;
+            if (carrinho.length === 0) {
+                alert('❌ Seu carrinho está vazio!');
+                return;
+            }
+
+            // Verificar se todos os itens são da mesma loja
+            const lojasNoCarrinho = [...new Set(carrinho.map(item => item.loja_id))];
+            if (lojasNoCarrinho.length > 1) {
+                alert('❌ Todos os itens devem ser da mesma loja! Faça pedidos separados para lojas diferentes.');
+                return;
+            }
+
+            const lojaId = lojasNoCarrinho[0];
+            const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
 
             try {
-                const total = carrinho.reduce((sum, item) => sum + (item.preco * item.quantidade), 0);
+                console.log('🔄 Finalizando pedido...');
                 
+                // 1. Criar pedido principal
                 const { data: pedido, error } = await supabase
                     .from('pedidos')
                     .insert([{
-                        cliente_id: 1, // Em uma app real, seria o ID do usuário logado
-                        loja_id: lojaAtual.id,
+                        loja_id: lojaId,
+                        cliente_id: clienteId,
                         total: total,
-                        endereco_entrega: 'Endereço do cliente', // Em uma app real, viria do perfil
-                        status: 'pendente'
+                        status: 'pendente',
+                        endereco_entrega: document.getElementById('perfilEndereco').textContent
                     }])
                     .select();
 
                 if (error) throw error;
 
-                // Limpar carrinho
+                console.log('✅ Pedido criado:', pedido);
+
+                // 2. Criar itens do pedido
+                const itensPedido = carrinho.map(item => ({
+                    pedido_id: pedido[0].id,
+                    produto_id: item.id,
+                    quantidade: item.quantidade,
+                    preco_unitario: item.preco
+                }));
+
+                const { error: itensError } = await supabase
+                    .from('itens_pedido')
+                    .insert(itensPedido);
+
+                if (itensError) throw itensError;
+
+                console.log('✅ Itens do pedido criados');
+
+                // 3. Limpar carrinho e mostrar sucesso
                 carrinho = [];
                 atualizarCarrinho();
                 
-                alert('🎉 Pedido realizado com sucesso!');
-                abrirTab('pedidos');
-                
+                alert(`🎉 Pedido #${pedido[0].id} realizado com sucesso!\n\nTotal: R$ ${total.toFixed(2)}\n\nAcompanhe o status na aba "Meus Pedidos".`);
+
+                // 4. Atualizar lista de pedidos
+                carregarPedidos();
+
             } catch (error) {
-                console.error('Erro ao finalizar pedido:', error);
+                console.error('❌ Erro ao finalizar pedido:', error);
                 alert('❌ Erro ao finalizar pedido. Tente novamente.');
             }
         }
 
+        // Carregar Pedidos do Cliente
+        async function carregarPedidos() {
+            try {
+                const { data, error } = await supabase
+                    .from('pedidos')
+                    .select(`
+                        *,
+                        lojas(nome)
+                    `)
+                    .eq('cliente_id', clienteId)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                renderizarPedidos(data || []);
+
+            } catch (error) {
+                console.error('Erro ao carregar pedidos:', error);
+                mostrarErro('pedidosLista', 'Erro ao carregar pedidos.');
+            }
+        }
+
+        function renderizarPedidos(pedidos) {
+            const container = document.getElementById('pedidosLista');
+            
+            if (!pedidos || pedidos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div>📦</div>
+                        <h3>Nenhum pedido ainda</h3>
+                        <p>Seus pedidos aparecerão aqui</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = pedidos.map(pedido => `
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div class="pedido-id">Pedido #${pedido.id} - ${pedido.lojas?.nome || 'Loja'}</div>
+                        <div class="pedido-status status-${pedido.status}">
+                            ${getStatusText(pedido.status)}
+                        </div>
+                    </div>
+                    <div class="pedido-total">Total: R$ ${(pedido.total || 0).toFixed(2)}</div>
+                    <div style="color: #666; font-size: 0.9rem; margin-top: 5px;">
+                        📍 ${pedido.endereco_entrega || 'Endereço não informado'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pendente': '⏳ Pendente',
+                'aceito': '✅ Aceito',
+                'preparando': '👨‍🍳 Preparando',
+                'pronto': '📦 Pronto para Entrega',
+                'entregue': '🎉 Entregue',
+                'cancelado': '❌ Cancelado'
+            };
+            return statusMap[status] || status;
+        }
+
+        // Filtros e Busca
+        function filtrarLojas(categoria) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            if (categoria === 'todos') {
+                renderizarLojas();
+            } else {
+                const lojasFiltradas = lojas.filter(loja => loja.categoria === categoria);
+                renderizarLojasFiltradas(lojasFiltradas);
+            }
+        }
+
+        function renderizarLojasFiltradas(lojasFiltradas) {
+            const grid = document.getElementById('lojasGrid');
+            
+            if (lojasFiltradas.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state">
+                        <div>🔍</div>
+                        <h3>Nenhuma loja encontrada</h3>
+                        <p>Tente outra categoria ou busca</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = lojasFiltradas.map(loja => `
+                <div class="loja-card" onclick="abrirModalLoja(${loja.id})">
+                    <div class="loja-header">
+                        <div class="loja-nome">${loja.nome}</div>
+                        <div class="loja-categoria">${getCategoriaIcon(loja.categoria)} ${loja.categoria}</div>
+                    </div>
+                    <div class="loja-descricao">${loja.descricao || 'Sem descrição'}</div>
+                    <div class="loja-info">
+                        <span>📍 ${loja.endereco || 'Endereço não informado'}</span>
+                        <div class="loja-status">
+                            <span class="status-aberto">●</span> Aberto agora
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Busca em tempo real
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const termo = e.target.value.toLowerCase().trim();
+            
+            if (termo === '') {
+                renderizarLojas();
+                return;
+            }
+
+            const lojasFiltradas = lojas.filter(loja => 
+                loja.nome.toLowerCase().includes(termo) ||
+                loja.descricao?.toLowerCase().includes(termo) ||
+                loja.categoria.toLowerCase().includes(termo)
+            );
+
+            renderizarLojasFiltradas(lojasFiltradas);
+        });
+
+        // Funções auxiliares
+        function mostrarFeedback(mensagem) {
+            // Criar um toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #28a745;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1001;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = mensagem;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+
+        function mostrarErro(elementoId, mensagem) {
+            const elemento = document.getElementById(elementoId);
+            elemento.innerHTML = `
+                <div class="empty-state">
+                    <div>❌</div>
+                    <h3>Erro</h3>
+                    <p>${mensagem}</p>
+                </div>
+            `;
+        }
+
+        function editarPerfil() {
+            alert('🔧 Funcionalidade de edição de perfil em desenvolvimento...');
+        }
+
         // Inicialização
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Inicializando dashboard do cliente...');
             carregarLojas();
+            carregarPedidos();
         });
     </script>
 </body>
-</html>
+    </html>
